@@ -1,0 +1,15 @@
+{
+  "type": "postgres",
+  "username": "postgres",
+  "password": "yourpass",
+  "database": "trellodb",
+  "entities": [
+    "dist/**/*.entity{.ts,.js}"
+  ],
+  "synchronize": true,
+  "logging": true,
+  "cache": true,
+  "migrationsTableName": "migrations_typeorm",
+  "migrations": ["dist/migration/*.js"],
+  "migrationsRun": true
+}
