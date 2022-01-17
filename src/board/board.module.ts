@@ -9,5 +9,6 @@ import {Board} from '../models/board.entity';
     controllers: [BoardController],
     providers: [BoardService],
 })
+
 export class BoardModule {
 }
