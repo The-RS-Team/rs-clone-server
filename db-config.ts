@@ -1,18 +1,20 @@
 import {TypeOrmModuleOptions} from '@nestjs/typeorm';
+
 require('dotenv').config();
 
 class ConfigService {
     public createTypeOrmProdConfig(): TypeOrmModuleOptions {
         return {
             type: 'postgres',
-            host: '127.0.0.1',
+            host: 'localhost',
             port: 5432,
-            username: 'admin',
+            username: 'postgres',
             password: 'o6mz9QHYr76pIHND',
             logging: true,
             database: 'trello-db',
             synchronize: true,
-            entities: ['dist/**/*.entity{*.ts,*.js}'],
+            autoLoadEntities: true,
+            // entities: ['dist/**/*.entity{*.ts,*.js}'],
             logger: 'advanced-console',
         };
     }

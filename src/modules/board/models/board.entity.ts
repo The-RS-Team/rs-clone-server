@@ -1,10 +1,11 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
+import {randomUUID} from 'crypto';
 
-@Entity()
+@Entity('board')
 export class Board {
-    @ApiPropertyOptional({type: Number})
+    @ApiPropertyOptional({type: randomUUID})
     @PrimaryGeneratedColumn('uuid')
     id: string;
 

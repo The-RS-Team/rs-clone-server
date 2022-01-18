@@ -1,25 +1,24 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Board} from '../models/board.entity';
+import {Board} from './models/board.entity';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 
 @Injectable()
 export class BoardService {
     constructor(
         @InjectRepository(Board)
-        private readonly boardRepository: Repository<Board>,
-    ) {
+        private readonly boardRepository: Repository<Board>,) {
     }
 
     async getBoards(): Promise<Board[]> {
         return this.boardRepository.find();
     }
 
-    async getBoard(id: number): Promise<Board> {
+    async getBoard(id: string): Promise<Board> {
         return this.boardRepository.findOne(id);
     }
 
-    async updateBoard(id: number, board: Board): Promise<UpdateResult> {
+    async updateBoard(id: string, board: Board): Promise<UpdateResult> {
         return this.boardRepository.update(id, board);
     }
 
@@ -28,7 +27,7 @@ export class BoardService {
         return board;
     }
 
-    async deleteBoard(id: number): Promise<DeleteResult> {
+    async deleteBoard(id: string): Promise<DeleteResult> {
         return this.boardRepository.delete(id);
     }
 }

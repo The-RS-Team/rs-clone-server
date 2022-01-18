@@ -1,10 +1,10 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
-import {Board} from '../models/board.entity';
+import {Board} from './models/board.entity';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
 import {DeleteResult, UpdateResult} from 'typeorm';
 
-@Controller('boards')
+@Controller('board')
 export class BoardController {
     constructor(private readonly boardService: BoardService) {
     }
@@ -18,7 +18,7 @@ export class BoardController {
     @Get(':id')
     @ApiOkResponse({description: 'Board retrieved successfully.'})
     @ApiNotFoundResponse({description: 'Board not found.'})
-    async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+    async getBoardById(@Param('id', ParseUUIDPipe) id: string): Promise<Board> {
         return this.boardService.getBoard(id);
     }
 
@@ -33,14 +33,16 @@ export class BoardController {
     @ApiOkResponse({description: 'Post updated successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
     @ApiUnprocessableEntityResponse({description: 'Post title already exists.'})
-    public update(@Param('id', ParseIntPipe) id: number, @Body() board: Board): Promise<UpdateResult> {
+    public update(@Param('id', ParseUUIDPipe) id: string, @Body() board: Board): Promise<UpdateResult> {
         return this.boardService.updateBoard(id, board);
     }
 
     @Delete(':id')
     @ApiOkResponse({description: 'Post deleted successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
-    public delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
+    public delete(@Param('id', ParseUUIDPipe) id: string): Promise<DeleteResult> {
         return this.boardService.deleteBoard(id);
     }
+
+
 }
