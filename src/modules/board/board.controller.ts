@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
 import {BoardService} from './board.service';
 import {Board} from './models/board.entity';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
@@ -9,17 +9,23 @@ export class BoardController {
     constructor(private readonly boardService: BoardService) {
     }
 
-    @Get()
+    @Get('/all')
     @ApiOkResponse({description: 'Boards retrieved successfully.'})
     async getBoards(): Promise<Board[]> {
         return this.boardService.getBoards();
     }
 
-    @Get(':id')
+    @Get('/id/:id')
     @ApiOkResponse({description: 'Board retrieved successfully.'})
     @ApiNotFoundResponse({description: 'Board not found.'})
     async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
         return this.boardService.getBoard(id);
+    }
+
+    @Get('/fav')
+    @ApiOkResponse({description: 'Favorite boards retrieved successfully.'})
+    async getBoardsFavorite(): Promise<Board[]> {
+        return this.boardService.getBoardsFavorite();
     }
 
     @Post()

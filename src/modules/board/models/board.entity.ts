@@ -5,7 +5,7 @@ import {randomInt} from 'crypto';
 
 @Entity()
 export class Board {
-    @ApiPropertyOptional({type: randomInt})
+    @ApiPropertyOptional({type: Number})
     @PrimaryGeneratedColumn('increment')
     public id: number;
 

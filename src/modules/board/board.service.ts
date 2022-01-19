@@ -14,6 +14,13 @@ export class BoardService {
         return this.boardRepository.find();
     }
 
+    async getBoardsFavorite(): Promise<Board[]> {
+        return this.boardRepository
+            .createQueryBuilder('board')
+            .where('board.isFavorite=:isFavorite', {isFavorite: true})
+            .getMany();
+    }
+
     async getBoard(id: number): Promise<Board> {
         return this.boardRepository.findOne(id);
     }
