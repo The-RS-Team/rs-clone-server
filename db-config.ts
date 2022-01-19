@@ -23,4 +23,4 @@ class ConfigService {
 const configService = new ConfigService();
 export default configService;
 
-//docker run --name trello-pg -e POSTGRES_DATABASE=trello-db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=o6mz9QHYr76pIHND -d postgres
+//docker run --name trello-pg -e POSTGRES_DATABASE=trello-db -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=o6mz9QHYr76pIHND -d postgres

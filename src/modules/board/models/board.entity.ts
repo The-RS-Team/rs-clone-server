@@ -1,28 +1,28 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {randomUUID} from 'crypto';
+import {randomInt} from 'crypto';
 
-@Entity('board')
+@Entity()
 export class Board {
-    @ApiPropertyOptional({type: randomUUID})
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @ApiPropertyOptional({type: randomInt})
+    @PrimaryGeneratedColumn('increment')
+    public id: number;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
     @IsNotEmpty()
-    title: string;
+    public title: string;
 
     @ApiPropertyOptional({type: String})
     @Column('text', {})
-    description: string;
+    public description: string;
 
     @ApiPropertyOptional({type: Boolean})
     @Column('boolean', {})
-    isFavorite: boolean;
+    public isFavorite: boolean;
 
     @ApiPropertyOptional({type: String})
     @Column('text', {})
-    background: string;
+    public background: string;
 }

@@ -7,27 +7,28 @@ import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 export class BoardService {
     constructor(
         @InjectRepository(Board)
-        private readonly boardRepository: Repository<Board>,) {
+        private readonly boardRepository: Repository<Board>) {
     }
 
     async getBoards(): Promise<Board[]> {
         return this.boardRepository.find();
     }
 
-    async getBoard(id: string): Promise<Board> {
+    async getBoard(id: number): Promise<Board> {
         return this.boardRepository.findOne(id);
     }
 
-    async updateBoard(id: string, board: Board): Promise<UpdateResult> {
+    async updateBoard(id: number, board: Board): Promise<UpdateResult> {
         return this.boardRepository.update(id, board);
     }
 
     async create(board: Board): Promise<Board> {
-        this.boardRepository.create(board);
+        this.boardRepository.save(board);
         return board;
     }
 
-    async deleteBoard(id: string): Promise<DeleteResult> {
+    async deleteBoard(id: number): Promise<DeleteResult> {
         return this.boardRepository.delete(id);
     }
 }
+

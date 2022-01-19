@@ -18,7 +18,7 @@ export class BoardController {
     @Get(':id')
     @ApiOkResponse({description: 'Board retrieved successfully.'})
     @ApiNotFoundResponse({description: 'Board not found.'})
-    async getBoardById(@Param('id', ParseUUIDPipe) id: string): Promise<Board> {
+    async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
         return this.boardService.getBoard(id);
     }
 
@@ -33,14 +33,14 @@ export class BoardController {
     @ApiOkResponse({description: 'Post updated successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
     @ApiUnprocessableEntityResponse({description: 'Post title already exists.'})
-    public update(@Param('id', ParseUUIDPipe) id: string, @Body() board: Board): Promise<UpdateResult> {
+    public update(@Param('id', ParseIntPipe) id: number, @Body() board: Board): Promise<UpdateResult> {
         return this.boardService.updateBoard(id, board);
     }
 
     @Delete(':id')
     @ApiOkResponse({description: 'Post deleted successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
-    public delete(@Param('id', ParseUUIDPipe) id: string): Promise<DeleteResult> {
+    public delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
         return this.boardService.deleteBoard(id);
     }
 
