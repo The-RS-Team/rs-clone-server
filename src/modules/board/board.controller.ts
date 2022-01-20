@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
 import {Board} from './models/board.entity';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
@@ -35,12 +35,12 @@ export class BoardController {
         return this.boardService.create(board);
     }
 
-    @Put(':id')
+    @Put()
     @ApiOkResponse({description: 'Post updated successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
     @ApiUnprocessableEntityResponse({description: 'Post title already exists.'})
-    public update(@Param('id', ParseIntPipe) id: number, @Body() board: Board): Promise<UpdateResult> {
-        return this.boardService.updateBoard(id, board);
+    public update(@Body() board: Board): Promise<UpdateResult> {
+        return this.boardService.updateBoard(board);
     }
 
     @Delete(':id')

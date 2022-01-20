@@ -25,8 +25,8 @@ export class BoardService {
         return this.boardRepository.findOne(id);
     }
 
-    async updateBoard(id: number, board: Board): Promise<UpdateResult> {
-        return this.boardRepository.update(id, board);
+    async updateBoard(board: Board): Promise<UpdateResult> {
+        return this.boardRepository.update(board.id, board);
     }
 
     async create(board: Board): Promise<Board> {
