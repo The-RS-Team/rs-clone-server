@@ -6,12 +6,14 @@ import {SocketGateway} from './socket.gateway';
 import {UsersController} from './modules/users/users.controller';
 import {UsersModule} from './modules/users/users.module';
 import configService from '../db-config';
+import {ColumnsModule} from './modules/columns/columns.module';
 
 @Module({
     imports: [
         TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
         AuthModule,
         BoardModule,
+        ColumnsModule,
         UsersModule,
     ],
     controllers: [UsersController],

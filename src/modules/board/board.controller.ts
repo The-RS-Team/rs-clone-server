@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
-import {Board} from './models/board.entity';
+import {Board} from './models/board';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
 import {DeleteResult, UpdateResult} from 'typeorm';
 
