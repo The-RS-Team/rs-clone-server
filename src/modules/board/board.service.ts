@@ -1,35 +1,35 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Board} from './models/board';
+import {BoardEntity} from './models/board';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 
 @Injectable()
 export class BoardService {
     constructor(
-        @InjectRepository(Board)
-        private readonly boardRepository: Repository<Board>) {
+        @InjectRepository(BoardEntity)
+        private readonly boardRepository: Repository<BoardEntity>) {
     }
 
-    async getBoards(): Promise<Board[]> {
+    async getBoards(): Promise<BoardEntity[]> {
         return this.boardRepository.find();
     }
 
-    async getBoardsFavorite(): Promise<Board[]> {
+    async getBoardsFavorite(): Promise<BoardEntity[]> {
         return this.boardRepository
             .createQueryBuilder('board')
             .where('board.isFavorite=:isFavorite', {isFavorite: true})
             .getMany();
     }
 
-    async getBoard(id: number): Promise<Board> {
+    async getBoard(id: number): Promise<BoardEntity> {
         return this.boardRepository.findOne(id);
     }
 
-    async updateBoard(board: Board): Promise<UpdateResult> {
+    async updateBoard(board: BoardEntity): Promise<UpdateResult> {
         return this.boardRepository.update(board.id, board);
     }
 
-    async create(board: Board): Promise<Board> {
+    async create(board: BoardEntity): Promise<BoardEntity> {
         return this.boardRepository.save(board);
     }
 

@@ -6,4 +6,6 @@ export enum Messages {
     hello = 'hello',
     newMessage = 'new_message',
     createRoom = 'create_room',
+    newColumn = 'new_column',
+    newCard = 'new_card',
 }

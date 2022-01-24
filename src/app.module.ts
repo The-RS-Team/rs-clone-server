@@ -1,23 +1,27 @@
-import {Module} from '@nestjs/common';
-import {AuthModule} from './auth/auth.module';
-import {TypeOrmModule} from '@nestjs/typeorm';
-import {BoardModule} from './modules/board/board.module';
-import {SocketGateway} from './socket.gateway';
-import {UsersController} from './modules/users/users.controller';
-import {UsersModule} from './modules/users/users.module';
 import configService from '../db-config';
-import {ColumnsModule} from './modules/columns/columns.module';
+import {AuthModule} from './auth/auth.module';
+import {BoardModule} from './modules/board/board.module';
+import {ColumnModule} from './modules/columns/column.module';
+import {Module} from '@nestjs/common';
+import {SocketGateway} from './socket.gateway';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {UsersController} from './modules/users/users.controller';
+import {CardModule} from './modules/card/card.module';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
         AuthModule,
         BoardModule,
-        ColumnsModule,
-        UsersModule,
+        ColumnModule,
+        CardModule,
+        TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
     ],
-    controllers: [UsersController],
-    providers: [SocketGateway],
+    controllers: [
+        UsersController,
+    ],
+    providers: [
+        SocketGateway,
+    ],
 })
 
 export class AppModule {

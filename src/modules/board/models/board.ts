@@ -2,8 +2,8 @@ import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
 
-@Entity()
-export class Board {
+@Entity('board')
+export class BoardEntity {
     @ApiPropertyOptional({type: Number})
     @PrimaryGeneratedColumn('increment')
     public id: number;

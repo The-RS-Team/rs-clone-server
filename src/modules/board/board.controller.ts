@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
-import {Board} from './models/board';
+import {BoardEntity} from './models/board';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
 import {DeleteResult, UpdateResult} from 'typeorm';
 
@@ -11,27 +11,27 @@ export class BoardController {
 
     @Get('/all')
     @ApiOkResponse({description: 'Boards retrieved successfully.'})
-    async getBoards(): Promise<Board[]> {
+    async getBoards(): Promise<BoardEntity[]> {
         return this.boardService.getBoards();
     }
 
     @Get('/id/:id')
     @ApiOkResponse({description: 'Board retrieved successfully.'})
     @ApiNotFoundResponse({description: 'Board not found.'})
-    async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
+    async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<BoardEntity> {
         return this.boardService.getBoard(id);
     }
 
     @Get('/fav')
     @ApiOkResponse({description: 'Favorite boards retrieved successfully.'})
-    async getBoardsFavorite(): Promise<Board[]> {
+    async getBoardsFavorite(): Promise<BoardEntity[]> {
         return this.boardService.getBoardsFavorite();
     }
 
     @Post()
     @ApiCreatedResponse({description: 'Board created successfully.'})
     @ApiUnprocessableEntityResponse({description: 'Board title already exists.'})
-    async create(@Body() board: Board): Promise<Board> {
+    async create(@Body() board: BoardEntity): Promise<BoardEntity> {
         return this.boardService.create(board);
     }
 
@@ -39,7 +39,7 @@ export class BoardController {
     @ApiOkResponse({description: 'Post updated successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
     @ApiUnprocessableEntityResponse({description: 'Post title already exists.'})
-    public update(@Body() board: Board): Promise<UpdateResult> {
+    public update(@Body() board: BoardEntity): Promise<UpdateResult> {
         return this.boardService.updateBoard(board);
     }
 

@@ -1,30 +1,29 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Columns} from './models/columns';
+import {ColumnEntity} from './models/column';
 import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 
 @Injectable()
-export class ColumnsService {
+export class ColumnService {
     constructor(
-        @InjectRepository(Columns)
-        private readonly columnsRepository: Repository<Columns>) {
+        @InjectRepository(ColumnEntity)
+        private readonly columnsRepository: Repository<ColumnEntity>) {
     }
 
-    async getColumns(): Promise<Columns[]> {
+    async getColumns(): Promise<ColumnEntity[]> {
         return this.columnsRepository.find();
     }
 
-    async getColumn(id: number): Promise<Columns> {
+    async getColumn(id: number): Promise<ColumnEntity> {
         return this.columnsRepository.findOne(id);
     }
 
-    async updateColumn(column: Columns): Promise<UpdateResult> {
+    async updateColumn(column: ColumnEntity): Promise<UpdateResult> {
         return this.columnsRepository.update(column.id, column);
     }
 
-    async create(column: Columns): Promise<Columns> {
-        this.columnsRepository.save(column);
-        return column;
+    async create(column: ColumnEntity): Promise<ColumnEntity> {
+        return this.columnsRepository.save(column);
     }
 
     async deleteColumn(id: number): Promise<DeleteResult> {

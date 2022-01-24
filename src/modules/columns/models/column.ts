@@ -1,16 +1,16 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {Board} from '../../board/models/board';
+import {BoardEntity} from '../../board/models/board';
 
-@Entity()
-export class Columns {
+@Entity('column')
+export class ColumnEntity {
     @ApiPropertyOptional({type: Number})
     @PrimaryGeneratedColumn('increment')
     public id: number;
 
-    @ManyToOne(() => Board, board => board.id)
-    board: Board;
+    @ManyToOne(() => BoardEntity, board => board.id, {onDelete: 'CASCADE'})
+    board: BoardEntity;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
