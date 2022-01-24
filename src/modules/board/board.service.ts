@@ -30,8 +30,7 @@ export class BoardService {
     }
 
     async create(board: Board): Promise<Board> {
-        this.boardRepository.save(board);
-        return board;
+        return this.boardRepository.save(board);
     }
 
     async deleteBoard(id: number): Promise<DeleteResult> {
