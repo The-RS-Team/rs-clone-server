@@ -11,7 +11,7 @@ export class ColumnService {
     }
 
     async getColumns(): Promise<ColumnEntity[]> {
-        return this.columnsRepository.find();
+        return this.columnsRepository.find({order: {position: 'ASC'}});
     }
 
     async getColumn(id: number): Promise<ColumnEntity> {

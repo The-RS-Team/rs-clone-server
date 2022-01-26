@@ -1,6 +1,7 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
+import {ColumnEntity} from '../../columns/models/column';
 
 @Entity('card')
 export class CardEntity {
@@ -8,8 +9,8 @@ export class CardEntity {
     @PrimaryGeneratedColumn('increment')
     public id: number;
 
-    // @ManyToOne(() => Board, board => board.id, {onDelete: 'CASCADE'})
-    // board: Board;
+    @ManyToOne(() => ColumnEntity, column => column.cards, {onDelete: 'CASCADE', nullable: false})
+    public column: ColumnEntity;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})

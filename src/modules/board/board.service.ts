@@ -22,7 +22,7 @@ export class BoardService {
     }
 
     async getBoard(id: number): Promise<BoardEntity> {
-        return this.boardRepository.findOne(id);
+        return this.boardRepository.findOne(id, {relations: ['columns']});
     }
 
     async updateBoard(board: BoardEntity): Promise<UpdateResult> {

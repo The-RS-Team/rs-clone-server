@@ -1,7 +1,8 @@
-import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
 import {BoardEntity} from '../../board/models/board';
+import {CardEntity} from '../../card/models/card';
 
 @Entity('column')
 export class ColumnEntity {
@@ -9,8 +10,8 @@ export class ColumnEntity {
     @PrimaryGeneratedColumn('increment')
     public id: number;
 
-    @ManyToOne(() => BoardEntity, board => board.id, {onDelete: 'CASCADE'})
-    board: BoardEntity;
+    @ManyToOne(() => BoardEntity, board => board.columns, {onDelete: 'CASCADE', nullable: false})
+    public board: BoardEntity;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
@@ -25,4 +26,8 @@ export class ColumnEntity {
     @ApiPropertyOptional({type: String})
     @Column('text', {})
     public description: string;
+
+    @OneToMany(() => CardEntity, card => card.column, {eager: true})
+    @JoinTable()
+    public cards: CardEntity[];
 }
