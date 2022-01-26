@@ -1,7 +1,7 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {ColumnEntity} from '../../columns/models/column';
+import {ColumnEntity} from '../../column/models/column';
 
 @Entity('card')
 export class CardEntity {
@@ -12,12 +12,12 @@ export class CardEntity {
     @ManyToOne(() => ColumnEntity, column => column.cards, {onDelete: 'CASCADE', nullable: false})
     public column: ColumnEntity;
 
-    @ApiPropertyOptional({type: String})
+    @ApiPropertyOptional({type: String, nullable: false})
     @Column('varchar', {nullable: false,})
     @IsNotEmpty()
     public title: string;
 
-    @ApiPropertyOptional({type: Number})
+    @ApiPropertyOptional({type: Number, nullable: false})
     @Column('integer', {nullable: false,})
     @IsNotEmpty()
     public position: number;

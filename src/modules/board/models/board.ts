@@ -1,7 +1,7 @@
 import {Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {ColumnEntity} from '../../columns/models/column';
+import {ColumnEntity} from '../../column/models/column';
 
 @Entity('board')
 export class BoardEntity {

@@ -3,6 +3,8 @@ import {BoardService} from './board.service';
 import {BoardEntity} from './models/board';
 import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
 import {DeleteResult, UpdateResult} from 'typeorm';
+import {CreateBoardDto} from './dto/create-board.dto';
+import {UpdateBoardDto} from './dto/update-board.dto';
 
 @Controller('board')
 export class BoardController {
@@ -31,7 +33,7 @@ export class BoardController {
     @Post()
     @ApiCreatedResponse({description: 'Board created successfully.'})
     @ApiUnprocessableEntityResponse({description: 'Board title already exists.'})
-    async create(@Body() board: BoardEntity): Promise<BoardEntity> {
+    async create(@Body() board: CreateBoardDto): Promise<BoardEntity> {
         return this.boardService.create(board);
     }
 
@@ -39,7 +41,7 @@ export class BoardController {
     @ApiOkResponse({description: 'Post updated successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
     @ApiUnprocessableEntityResponse({description: 'Post title already exists.'})
-    public update(@Body() board: BoardEntity): Promise<UpdateResult> {
+    public update(@Body() board: UpdateBoardDto): Promise<UpdateResult> {
         return this.boardService.updateBoard(board);
     }
 

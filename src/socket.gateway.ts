@@ -11,10 +11,12 @@ import {
 import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {Messages} from './app.constants';
-import {CardEntity} from './modules/card/models/card';
 import {CardService} from './modules/card/card.service';
-import {ColumnService} from './modules/columns/column.service';
-import {ColumnEntity} from './modules/columns/models/column';
+import {ColumnService} from './modules/column/column.service';
+import {CreateCardDto} from './modules/card/dto/create-card.dto';
+import {UpdateCardDto} from './modules/card/dto/update-card.dto';
+import {UpdateColumnDto} from './modules/column/dto/update-column.dto';
+import {CreateColumnDto} from './modules/column/dto/create-column.dto';
 
 @WebSocketGateway({
     cors: {origin: '*'},
@@ -66,22 +68,21 @@ export class SocketGateway
     //CardEntity
     @SubscribeMessage(Messages.newCard)
     newCard(
-        @MessageBody() data: any | CardEntity,
+        @MessageBody() data: CreateCardDto,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            if (data.id <= 0) data.id = null;
-            this.cardService.create(data as CardEntity).then(card => this.server.emit(Messages.newCard, card));
+            this.cardService.create(data as CreateCardDto).then(card => this.server.emit(Messages.newCard, card));
         }
     }
 
     @SubscribeMessage(Messages.updateCard)
     updateCard(
-        @MessageBody() data: any | CardEntity,
+        @MessageBody() data: UpdateCardDto,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.cardService.updateCard(data as CardEntity).then(card => this.server.emit(Messages.updateCard, card));
+            this.cardService.updateCard(data as UpdateCardDto).then(card => this.server.emit(Messages.updateCard, card));
         }
     }
 
@@ -121,22 +122,21 @@ export class SocketGateway
     //ColumnEntity
     @SubscribeMessage(Messages.newColumn)
     newColumn(
-        @MessageBody() data: any | ColumnEntity,
+        @MessageBody() data: CreateColumnDto,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            if (data.id <= 0) data.id = null;
-            this.columnService.create(data as ColumnEntity).then(column => this.server.emit(Messages.newColumn, column));
+            this.columnService.create(data as CreateColumnDto).then(column => this.server.emit(Messages.newColumn, column));
         }
     }
 
     @SubscribeMessage(Messages.updateColumn)
     updateColumn(
-        @MessageBody() data: any | ColumnEntity,
+        @MessageBody() data: UpdateColumnDto,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.columnService.updateColumn(data as ColumnEntity).then(column => this.server.emit(Messages.updateColumn, column));
+            this.columnService.updateColumn(data as UpdateColumnDto).then(column => this.server.emit(Messages.updateColumn, column));
         }
     }
 
@@ -167,7 +167,6 @@ export class SocketGateway
     ): void {
         if (data) {
             this.columnService.deleteColumn(data as number).then(deleteResult => {
-                this.logger.log('deleteResult', deleteResult);
                 this.server.emit(Messages.deleteColumn, deleteResult)
             });
         }
