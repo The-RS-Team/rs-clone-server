@@ -1,6 +1,6 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
-import {ApiPropertyOptional} from '@nestjs/swagger';
+import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 import {ColumnEntity} from '../../column/models/column';
 
 @Entity('card')

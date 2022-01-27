@@ -7,6 +7,8 @@ import {SocketGateway} from './socket.gateway';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {UsersController} from './modules/users/users.controller';
 import {CardModule} from './modules/card/card.module';
+import {UsersModule} from './modules/users/users.module';
+import {AuthController} from './auth/auth.controller';
 
 @Module({
     imports: [
@@ -14,10 +16,12 @@ import {CardModule} from './modules/card/card.module';
         BoardModule,
         ColumnModule,
         CardModule,
+        UsersModule,
         TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
     ],
     controllers: [
         UsersController,
+        AuthController,
     ],
     providers: [
         SocketGateway,

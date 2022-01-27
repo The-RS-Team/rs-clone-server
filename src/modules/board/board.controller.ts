@@ -1,7 +1,13 @@
 import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
 import {BoardEntity} from './models/board';
-import {ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiUnprocessableEntityResponse} from '@nestjs/swagger';
+import {
+    ApiCreatedResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiProperty,
+    ApiUnprocessableEntityResponse
+} from '@nestjs/swagger';
 import {DeleteResult, UpdateResult} from 'typeorm';
 import {CreateBoardDto} from './dto/create-board.dto';
 import {UpdateBoardDto} from './dto/update-board.dto';
@@ -13,6 +19,7 @@ export class BoardController {
 
     @Get('/all')
     @ApiOkResponse({description: 'Boards retrieved successfully.'})
+    @ApiProperty({default: [], isArray: true})
     async getBoards(): Promise<BoardEntity[]> {
         return this.boardService.getBoards();
     }
@@ -51,6 +58,4 @@ export class BoardController {
     public delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
         return this.boardService.deleteBoard(id);
     }
-
-
 }

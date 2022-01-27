@@ -14,7 +14,6 @@ class ConfigService {
             database: 'trello-db',
             synchronize: true,
             autoLoadEntities: true,
-            // entities: ['dist/**/*.entity{*.ts,*.js}'],
             logger: 'advanced-console',
         };
     }
