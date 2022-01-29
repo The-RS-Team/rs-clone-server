@@ -16,7 +16,7 @@ export class ColumnService {
         return this.columnsRepository.find({order: {position: 'ASC'}});
     }
 
-    async getColumn(id: number): Promise<ColumnEntity> {
+    async getColumn(id: string): Promise<ColumnEntity> {
         return this.columnsRepository.findOne(id);
     }
 
@@ -36,7 +36,7 @@ export class ColumnService {
         return this.columnsRepository.save(item);
     }
 
-    async deleteColumn(id: number): Promise<DeleteResult> {
+    async deleteColumn(id: string): Promise<DeleteResult> {
         return this.columnsRepository.delete(id);
     }
 }

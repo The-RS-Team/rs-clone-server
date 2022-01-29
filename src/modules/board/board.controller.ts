@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Put} from '@nestjs/common';
 import {BoardService} from './board.service';
 import {BoardEntity} from './models/board';
 import {
@@ -27,7 +27,7 @@ export class BoardController {
     @Get('/id/:id')
     @ApiOkResponse({description: 'Board retrieved successfully.'})
     @ApiNotFoundResponse({description: 'Board not found.'})
-    async getBoardById(@Param('id', ParseIntPipe) id: number): Promise<BoardEntity> {
+    async getBoardById(@Param('id', ParseUUIDPipe) id: string): Promise<BoardEntity> {
         return this.boardService.getBoard(id);
     }
 
@@ -55,7 +55,7 @@ export class BoardController {
     @Delete(':id')
     @ApiOkResponse({description: 'Post deleted successfully.'})
     @ApiNotFoundResponse({description: 'Post not found.'})
-    public delete(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
+    public delete(@Param('id', ParseUUIDPipe) id: string): Promise<DeleteResult> {
         return this.boardService.deleteBoard(id);
     }
 }

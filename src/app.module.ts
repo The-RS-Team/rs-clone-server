@@ -12,7 +12,7 @@ import {AuthController} from './auth/auth.controller';
 
 @Module({
     imports: [
-        AuthModule,
+        // AuthModule,
         BoardModule,
         ColumnModule,
         CardModule,
@@ -21,7 +21,7 @@ import {AuthController} from './auth/auth.controller';
     ],
     controllers: [
         UsersController,
-        AuthController,
+        // AuthController,
     ],
     providers: [
         SocketGateway,

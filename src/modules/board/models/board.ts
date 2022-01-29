@@ -5,9 +5,9 @@ import {ColumnEntity} from '../../column/models/column';
 
 @Entity('board')
 export class BoardEntity {
-    @ApiPropertyOptional({type: Number})
-    @PrimaryGeneratedColumn('increment')
-    public id: number;
+    @ApiPropertyOptional({type: String})
+    @PrimaryGeneratedColumn('uuid')
+    public id: string;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
@@ -15,7 +15,7 @@ export class BoardEntity {
     public title: string;
 
     @ApiPropertyOptional({type: String})
-    @Column('text', {})
+    @Column('text', {nullable: true,})
     public description: string;
 
     @ApiPropertyOptional({type: Boolean})

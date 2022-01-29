@@ -7,11 +7,11 @@ export class CreateColumnDto {
     @IsNotEmpty()
     readonly title: string;
 
-    @ApiPropertyOptional({type: Number, nullable: false})
+    @ApiPropertyOptional({type: String, nullable: false})
     @IsInt()
     @Min(0)
     @IsNotEmpty()
-    readonly boardId: number;
+    readonly boardId: string;
 
     @ApiPropertyOptional({type: Number})
     @IsInt()

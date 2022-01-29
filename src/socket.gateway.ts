@@ -71,8 +71,9 @@ export class SocketGateway
         @MessageBody() data: CreateCardDto,
         @ConnectedSocket() client: Socket,
     ): void {
+        console.log(data)
         if (data) {
-            this.cardService.create(data as CreateCardDto).then(card => this.server.emit(Messages.newCard, card));
+            this.cardService.create(data).then(card => this.server.emit(Messages.newCard, card));
         }
     }
 
@@ -82,23 +83,23 @@ export class SocketGateway
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.cardService.updateCard(data as UpdateCardDto).then(card => this.server.emit(Messages.updateCard, card));
+            this.cardService.updateCard(data).then(card => this.server.emit(Messages.updateCard, card));
         }
     }
 
     @SubscribeMessage(Messages.getCard)
     getCard(
-        @MessageBody() data: any | number,
+        @MessageBody() data: any | string,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.cardService.getCard(data as number).then(card => this.server.emit(Messages.getCard, card));
+            this.cardService.getCard(data).then(card => this.server.emit(Messages.getCard, card));
         }
     }
 
     @SubscribeMessage(Messages.getCards)
     getCards(
-        @MessageBody() data: any | number,
+        @MessageBody() data: any | string,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
@@ -108,11 +109,11 @@ export class SocketGateway
 
     @SubscribeMessage(Messages.deleteCard)
     deleteCard(
-        @MessageBody() data: any | number,
+        @MessageBody() data: any | string,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.cardService.deleteCard(data as number).then(deleteResult => {
+            this.cardService.deleteCard(data as string).then(deleteResult => {
                 this.logger.log('deleteResult', deleteResult);
                 this.server.emit(Messages.deleteCard, deleteResult);
             });
@@ -142,11 +143,11 @@ export class SocketGateway
 
     @SubscribeMessage(Messages.getColumn)
     getColumn(
-        @MessageBody() data: any | number,
+        @MessageBody() data: any | string,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.columnService.getColumn(data as number).then(column => this.server.emit(Messages.getColumn, column));
+            this.columnService.getColumn(data as string).then(column => this.server.emit(Messages.getColumn, column));
         }
     }
 
@@ -162,11 +163,11 @@ export class SocketGateway
 
     @SubscribeMessage(Messages.deleteColumn)
     deleteColumn(
-        @MessageBody() data: any | number,
+        @MessageBody() data: any | string,
         @ConnectedSocket() client: Socket,
     ): void {
         if (data) {
-            this.columnService.deleteColumn(data as number).then(deleteResult => {
+            this.columnService.deleteColumn(data as string).then(deleteResult => {
                 this.server.emit(Messages.deleteColumn, deleteResult)
             });
         }

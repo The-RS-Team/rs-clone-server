@@ -23,7 +23,7 @@ export class BoardService {
             .getMany();
     }
 
-    async getBoard(id: number): Promise<BoardEntity> {
+    async getBoard(id: string): Promise<BoardEntity> {
         return this.boardRepository.findOne(id, {relations: ['columns']});
     }
 
@@ -43,7 +43,7 @@ export class BoardService {
         return this.boardRepository.save(item);
     }
 
-    async deleteBoard(id: number): Promise<DeleteResult> {
+    async deleteBoard(id: string): Promise<DeleteResult> {
         return this.boardRepository.delete(id);
     }
 }

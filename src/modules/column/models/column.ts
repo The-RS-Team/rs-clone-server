@@ -1,17 +1,19 @@
 import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
-import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import {ApiPropertyOptional} from '@nestjs/swagger';
 import {BoardEntity} from '../../board/models/board';
 import {CardEntity} from '../../card/models/card';
 
 @Entity('column')
 export class ColumnEntity {
-    @ApiPropertyOptional({type: Number})
-    @PrimaryGeneratedColumn('increment')
-    public id: number;
+    @ApiPropertyOptional({type: String})
+    @PrimaryGeneratedColumn('uuid')
+    public id: string;
 
-    @ManyToOne(() => BoardEntity, board => board.columns, {onDelete: 'CASCADE', nullable: false})
-    public board: BoardEntity;
+    @ApiPropertyOptional({type: String})
+    @Column('varchar', {nullable: false,})
+    @IsNotEmpty()
+    public boardId: string;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
@@ -24,8 +26,11 @@ export class ColumnEntity {
     public position: number;
 
     @ApiPropertyOptional({type: String})
-    @Column('text', {})
+    @Column('text', {nullable: true,})
     public description: string;
+
+    @ManyToOne(() => BoardEntity, board => board.columns, {onDelete: 'CASCADE', nullable: false})
+    public board: BoardEntity;
 
     @OneToMany(() => CardEntity, card => card.column, {eager: true})
     @JoinTable()

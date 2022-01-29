@@ -16,7 +16,7 @@ export class CardService {
         return this.CardRepository.find();
     }
 
-    async getCard(id: number): Promise<CardEntity> {
+    async getCard(id: string): Promise<CardEntity> {
         return this.CardRepository.findOne(id);
     }
 
@@ -36,7 +36,7 @@ export class CardService {
         return this.CardRepository.save(item);
     }
 
-    async deleteCard(id: number): Promise<DeleteResult> {
+    async deleteCard(id: string): Promise<DeleteResult> {
         return this.CardRepository.delete(id);
     }
 }

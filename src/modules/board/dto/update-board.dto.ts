@@ -1,12 +1,11 @@
-import {IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Min} from 'class-validator';
+import {IS_UUID, IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, IsUUID, Min} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
 
 export class UpdateBoardDto {
-    @ApiPropertyOptional({type: Number, nullable: false})
-    @IsInt()
-    @Min(0)
+    @ApiPropertyOptional({type: String, nullable: false})
+    @IsUUID()
     @IsNotEmpty()
-    readonly id: number;
+    readonly id: string;
 
     @ApiPropertyOptional({type: String, nullable: false})
     @IsString()

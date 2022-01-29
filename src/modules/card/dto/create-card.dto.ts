@@ -7,14 +7,18 @@ export class CreateCardDto {
     @IsNotEmpty()
     readonly title: string;
 
-    @ApiPropertyOptional({type: Number, nullable: false})
+    @ApiPropertyOptional({type: String, nullable: false})
     @IsInt()
     @Min(0)
     @IsNotEmpty()
-    readonly columnId: number;
+    readonly columnId: string;
 
     @ApiPropertyOptional({type: Number})
     @IsInt()
     @Min(0)
     readonly position: number;
+
+    @ApiPropertyOptional({type: String, nullable: true})
+    @IsString()
+    readonly description: string;
 }
