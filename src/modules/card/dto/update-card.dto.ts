@@ -8,8 +8,7 @@ export class UpdateCardDto {
     readonly id: string;
 
     @ApiPropertyOptional({type: String, nullable: false})
-    @IsInt()
-    @Min(0)
+    @IsString()
     @IsNotEmpty()
     readonly columnId: string;
 

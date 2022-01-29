@@ -1,25 +1,34 @@
-import {Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
 
 @Entity('files')
-export class ColumnEntity {
-    @ApiPropertyOptional({type: Number})
-    @PrimaryGeneratedColumn('increment')
-    public id: number;
+export class FilesEntity {
+    @ApiPropertyOptional({type: String})
+    @PrimaryGeneratedColumn('uuid')
+    public id: string;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
     @IsNotEmpty()
-    public title: string;
-
-    @ApiPropertyOptional({type: Number})
-    @Column('integer', {nullable: false,})
-    @IsNotEmpty()
-    public position: number;
+    public originalname: string;
 
     @ApiPropertyOptional({type: String})
-    @Column('text', {})
-    public description: string;
+    @Column('varchar', {nullable: false,})
+    @IsNotEmpty()
+    public encoding: string;
 
+    @ApiPropertyOptional({type: String})
+    @Column('varchar', {nullable: false,})
+    @IsNotEmpty()
+    public mimetype: string;
+
+    @ApiPropertyOptional({type: Number, nullable: false})
+    @Column('integer', {nullable: false,})
+    @IsNotEmpty()
+    public size: number;
+
+    @ApiPropertyOptional({type: 'bytea'})
+    @Column('bytea', {})
+    public data: Buffer;
 }
