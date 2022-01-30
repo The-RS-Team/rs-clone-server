@@ -43,7 +43,6 @@ export class FilesController {
     @UseInterceptors(FileExtender)
     @UseInterceptors(FileInterceptor('file'))
     uploadFile(@UploadedFile() file: CreateFilesDto): Promise<string> {
-        console.log('file', file);
         if (file) {
             return this.filesService.create(file).then(fileEntity => JSON.stringify({id: fileEntity.id}));
         }

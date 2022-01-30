@@ -71,7 +71,6 @@ export class SocketGateway
         @MessageBody() data: CreateCardDto,
         @ConnectedSocket() client: Socket,
     ): void {
-        console.log(data)
         if (data) {
             this.cardService.create(data).then(card => this.server.emit(Messages.newCard, card));
         }

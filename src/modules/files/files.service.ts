@@ -40,7 +40,6 @@ export class FilesService {
 
     async create(createFilesDto: CreateFilesDto): Promise<FileEntity> {
         const item = this.filesEntityRepository.create(createFilesDto);
-        console.log('create', item)
         return this.filesEntityRepository.save(item);
     }
 
