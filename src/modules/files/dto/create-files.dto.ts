@@ -23,15 +23,12 @@ export class CreateFilesDto {
     public encoding: string;
 
     @ApiPropertyOptional({type: 'bytea', nullable: true})
-    public data: Buffer;
+    public buffer: Buffer;
 
-    constructor(file: Express.Multer.File) {
-        this.originalname = file.originalname
-        this.size = file.size
-        this.mimetype = file.mimetype
-        this.encoding = file.encoding
-        this.data = file.buffer
-    }
+    @ApiPropertyOptional({type: String, nullable: false})
+    @IsString()
+    @IsNotEmpty()
+    readonly cardId: string;
 }
 
 

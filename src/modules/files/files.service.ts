@@ -1,19 +1,17 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
-import {FilesEntity} from './models/files';
+import {FileEntity} from './models/files';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Column, DeleteResult, Repository, UpdateResult} from 'typeorm';
+import {DeleteResult, Repository, UpdateResult} from 'typeorm';
 import {CreateFilesDto} from './dto/create-files.dto';
-import {ApiPropertyOptional} from '@nestjs/swagger';
-import {IsNotEmpty} from 'class-validator';
 
 @Injectable()
 export class FilesService {
     constructor(
-        @InjectRepository(FilesEntity)
-        private readonly filesEntityRepository: Repository<FilesEntity>) {
+        @InjectRepository(FileEntity)
+        private readonly filesEntityRepository: Repository<FileEntity>) {
     }
 
-    async getFiles(): Promise<FilesEntity[]> {
+    async getFiles(): Promise<FileEntity[]> {
         return await this.filesEntityRepository
             .createQueryBuilder('files')
             .select('files.id')
@@ -21,14 +19,15 @@ export class FilesService {
             .addSelect('files.encoding')
             .addSelect('files.mimetype')
             .addSelect('files.size')
+            .addSelect('files.cardId')
             .getMany();
     }
 
-    async getFile(id: string): Promise<FilesEntity> {
+    async getFile(id: string): Promise<FileEntity> {
         return this.filesEntityRepository.findOne(id);
     }
 
-    async updateFile(filesEntity: FilesEntity): Promise<UpdateResult> {
+    async updateFile(filesEntity: FileEntity): Promise<UpdateResult> {
         const item = await this.filesEntityRepository.preload({
             id: filesEntity.id,
             ...filesEntity,
@@ -39,8 +38,9 @@ export class FilesService {
         return this.filesEntityRepository.update(item.id, item);
     }
 
-    async create(createFilesDto: CreateFilesDto): Promise<FilesEntity> {
+    async create(createFilesDto: CreateFilesDto): Promise<FileEntity> {
         const item = this.filesEntityRepository.create(createFilesDto);
+        console.log('create', item)
         return this.filesEntityRepository.save(item);
     }
 

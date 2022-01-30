@@ -1,11 +1,11 @@
 import {Controller, Delete, Get, Param, ParseUUIDPipe, Post, UploadedFile, UseInterceptors,} from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {Express} from 'express';
 import {FilesService} from './files.service';
 import {ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiProperty} from '@nestjs/swagger';
 import {CreateFilesDto} from './dto/create-files.dto';
-import {FilesEntity} from './models/files';
+import {FileEntity} from './models/files';
 import {DeleteResult} from 'typeorm';
+import {FileExtender} from './files.extender';
 
 @Controller('file')
 export class FilesController {
@@ -15,14 +15,14 @@ export class FilesController {
     @Get('/all')
     @ApiOkResponse({description: 'Files retrieved successfully.'})
     @ApiProperty({default: [], isArray: true})
-    async getFiles(): Promise<FilesEntity[]> {
+    async getFiles(): Promise<FileEntity[]> {
         return this.filesService.getFiles();
     }
 
     @Get('/id/:id')
     @ApiOkResponse({description: 'Files retrieved successfully.'})
     @ApiProperty({default: [], isArray: true})
-    async getFile(@Param('id', ParseUUIDPipe) id: string): Promise<FilesEntity> {
+    async getFile(@Param('id', ParseUUIDPipe) id: string): Promise<FileEntity> {
         return this.filesService.getFile(id);
     }
 
@@ -31,6 +31,7 @@ export class FilesController {
         schema: {
             type: 'object',
             properties: {
+                cardId: {type: 'string'},
                 file: {
                     type: 'string',
                     format: 'binary',
@@ -39,11 +40,12 @@ export class FilesController {
         },
     })
     @Post('upload')
+    @UseInterceptors(FileExtender)
     @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file: Express.Multer.File): Promise<string> {
+    uploadFile(@UploadedFile() file: CreateFilesDto): Promise<string> {
+        console.log('file', file);
         if (file) {
-            const fileDto = new CreateFilesDto(file);
-            return this.filesService.create(fileDto).then(fileEntity => JSON.stringify({id: fileEntity.id}));
+            return this.filesService.create(file).then(fileEntity => JSON.stringify({id: fileEntity.id}));
         }
     }
 

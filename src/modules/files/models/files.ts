@@ -1,12 +1,21 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiPropertyOptional} from '@nestjs/swagger';
+import {CardEntity} from '../../card/models/card';
 
-@Entity('files')
-export class FilesEntity {
+@Entity('file')
+export class FileEntity {
     @ApiPropertyOptional({type: String})
     @PrimaryGeneratedColumn('uuid')
     public id: string;
+
+    @ManyToOne(() => CardEntity, card => card.files, {onDelete: 'CASCADE', nullable: false})
+    public card: CardEntity;
+
+    @ApiPropertyOptional({type: String, nullable: false})
+    @Column('varchar', {nullable: false,})
+    @IsNotEmpty()
+    public cardId: string;
 
     @ApiPropertyOptional({type: String})
     @Column('varchar', {nullable: false,})
@@ -30,5 +39,5 @@ export class FilesEntity {
 
     @ApiPropertyOptional({type: 'bytea'})
     @Column('bytea', {})
-    public data: Buffer;
+    public buffer: Buffer;
 }

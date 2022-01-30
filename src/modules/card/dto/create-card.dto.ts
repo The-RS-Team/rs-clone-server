@@ -20,4 +20,6 @@ export class CreateCardDto {
     @ApiPropertyOptional({type: String, nullable: true})
     @IsString()
     readonly description: string;
+
+
 }
