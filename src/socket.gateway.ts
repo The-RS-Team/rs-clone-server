@@ -17,6 +17,8 @@ import {CreateCardDto} from './modules/card/dto/create-card.dto';
 import {UpdateCardDto} from './modules/card/dto/update-card.dto';
 import {UpdateColumnDto} from './modules/column/dto/update-column.dto';
 import {CreateColumnDto} from './modules/column/dto/create-column.dto';
+import {FilesService} from './modules/files/files.service';
+import {CreateFilesDto} from './modules/files/dto/create-files.dto';
 
 @WebSocketGateway({
     cors: {origin: '*'},
@@ -29,7 +31,9 @@ export class SocketGateway
 
     constructor(
         private readonly cardService: CardService,
-        private readonly columnService: ColumnService) {
+        private readonly columnService: ColumnService,
+        private readonly filesService: FilesService,
+    ) {
     }
 
     @WebSocketServer()
@@ -168,6 +172,46 @@ export class SocketGateway
         if (data) {
             this.columnService.deleteColumn(data as string).then(deleteResult => {
                 this.server.emit(Messages.deleteColumn, deleteResult)
+            });
+        }
+    }
+
+    //Files
+    @SubscribeMessage(Messages.newFile)
+    newFile(
+        @MessageBody() data: CreateFilesDto,
+        @ConnectedSocket() client: Socket,
+    ): void {
+        if (data) {
+            this.filesService.create(data).then(data => this.server.emit(Messages.newFile, data.id));
+        }
+    }
+
+    @SubscribeMessage(Messages.getFile)
+    getFile(
+        @MessageBody() data: any | string,
+        @ConnectedSocket() client: Socket,
+    ): void {
+        if (data) {
+            this.filesService.getFile(data as string).then(file => this.server.emit(Messages.getFile, file));
+        }
+    }
+
+    @SubscribeMessage(Messages.getFiles)
+    getFiles(
+        @ConnectedSocket() client: Socket,
+    ): void {
+        this.filesService.getFiles().then(files => this.server.emit(Messages.getFiles, files));
+    }
+
+    @SubscribeMessage(Messages.deleteFile)
+    deleteFile(
+        @MessageBody() data: any | string,
+        @ConnectedSocket() client: Socket,
+    ): void {
+        if (data) {
+            this.filesService.deleteFile(data as string).then(deleteResult => {
+                this.server.emit(Messages.deleteFile, deleteResult)
             });
         }
     }

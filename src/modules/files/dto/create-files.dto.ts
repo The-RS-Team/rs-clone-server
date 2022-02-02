@@ -1,6 +1,5 @@
 import {ApiPropertyOptional} from '@nestjs/swagger';
 import {IsNotEmpty, IsString, Min} from 'class-validator';
-import {Express} from 'express';
 
 export class CreateFilesDto {
     @ApiPropertyOptional({type: String, nullable: true})
@@ -28,7 +27,7 @@ export class CreateFilesDto {
     @ApiPropertyOptional({type: String, nullable: false})
     @IsString()
     @IsNotEmpty()
-    readonly cardId: string;
+    public cardId: string;
 }
 
 

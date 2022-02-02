@@ -5,7 +5,6 @@ import {ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiProperty} f
 import {CreateFilesDto} from './dto/create-files.dto';
 import {FileEntity} from './models/files';
 import {DeleteResult} from 'typeorm';
-import {FileExtender} from './files.extender';
 
 @Controller('file')
 export class FilesController {
@@ -31,7 +30,6 @@ export class FilesController {
         schema: {
             type: 'object',
             properties: {
-                cardId: {type: 'string'},
                 file: {
                     type: 'string',
                     format: 'binary',
@@ -39,11 +37,12 @@ export class FilesController {
             },
         },
     })
-    @Post('upload')
-    @UseInterceptors(FileExtender)
+    @Post('upload/:cardid')
+    // @UseInterceptors(FileExtender)
     @UseInterceptors(FileInterceptor('file'))
-    uploadFile(@UploadedFile() file: CreateFilesDto): Promise<string> {
+    uploadFile(@Param('cardid', ParseUUIDPipe) cardid: string, @UploadedFile() file: CreateFilesDto): Promise<string> {
         if (file) {
+            file.cardId = cardid;
             return this.filesService.create(file).then(fileEntity => JSON.stringify({id: fileEntity.id}));
         }
     }
