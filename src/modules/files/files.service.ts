@@ -31,36 +31,28 @@ export class FilesService {
     }
   }
 
-  async updateFile(filesEntity: FileEntity): Promise<UpdateResult | Error> {
-    try {
-      const item = await this.filesEntityRepository.preload({
-        id: filesEntity.id,
-        ...filesEntity,
-      });
-      if (!item) {
-        return new NotFoundException(`Item ${filesEntity.id} not found`);
-      }
-      return this.filesEntityRepository.update(item.id, item);
-    } catch (e) {
-      return new Error(e);
+  async updateFile(filesEntity: FileEntity): Promise<UpdateResult> {
+    const item = await this.filesEntityRepository.preload({
+      id: filesEntity.id,
+      ...filesEntity,
+    });
+    if (!item) {
+      throw new NotFoundException(`Item ${filesEntity.id} not found`);
     }
+    return this.filesEntityRepository.update(item.id, item);
   }
 
-  async create(createFilesDto: CreateFilesDto): Promise<FileEntity | Error> {
+  async create(createFilesDto: CreateFilesDto): Promise<FileEntity> {
     try {
       const item = this.filesEntityRepository.create(createFilesDto);
       return this.filesEntityRepository.save(item);
     } catch (e) {
-      return new Error(e);
+      console.log('createFiles: ', e);
     }
   }
 
-  async deleteFile(id: string): Promise<DeleteResult | Error> {
-    try {
-      return this.filesEntityRepository.delete(id);
-    } catch (e) {
-      return new Error(e);
-    }
+  async deleteFile(id: string): Promise<DeleteResult> {
+    return this.filesEntityRepository.delete(id);
   }
 }
 
