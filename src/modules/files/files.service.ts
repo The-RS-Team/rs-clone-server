@@ -11,15 +11,16 @@ export class FilesService {
     private readonly filesEntityRepository: Repository<FileEntity>) {
   }
 
-  async getFiles(): Promise<FileEntity[]> {
+  async getFiles(cardId: string): Promise<FileEntity[]> {
     return await this.filesEntityRepository
-      .createQueryBuilder('files')
-      .select('files.id')
-      .addSelect('files.originalname')
-      .addSelect('files.encoding')
-      .addSelect('files.mimetype')
-      .addSelect('files.size')
-      .addSelect('files.cardId')
+      .createQueryBuilder('file')
+      .select('file.id')
+      .addSelect('file.originalname')
+      .addSelect('file.encoding')
+      .addSelect('file.mimetype')
+      .addSelect('file.size')
+      .addSelect('file.cardId')
+      .where('file.cardId = :cardId', { cardId: cardId })
       .getMany();
   }
 

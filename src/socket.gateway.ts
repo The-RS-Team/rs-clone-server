@@ -217,10 +217,14 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.getFiles)
-  getFiles(@ConnectedSocket() client: Socket): void {
-    this.filesService
-      .getFiles()
-      .then((files) => this.server.emit(Messages.getFiles, files));
+  getFiles(
+    @MessageBody() data: any | string,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.filesService
+        .getFiles(data)
+        .then((files) => this.server.emit(Messages.getFiles, files));
+    }
   }
 
   @SubscribeMessage(Messages.deleteFile)
