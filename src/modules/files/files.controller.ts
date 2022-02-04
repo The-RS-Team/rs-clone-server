@@ -11,11 +11,11 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {
   }
 
-  @Get('/all')
+  @Get('/all/:cardId')
   @ApiOkResponse({ description: 'Files retrieved successfully.' })
   @ApiProperty({ default: [], isArray: true })
-  async getFiles(): Promise<FileEntity[]> {
-    return this.filesService.getFiles();
+  async getFiles(@Param('cardId', ParseUUIDPipe) cardId: string): Promise<FileEntity[]> {
+    return this.filesService.getFiles(cardId);
   }
 
   @Get('/id/:id')
