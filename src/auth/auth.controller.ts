@@ -14,7 +14,6 @@ export class AuthController {
   @ApiCreatedResponse({ description: 'User login successfully.' })
   @ApiUnprocessableEntityResponse({ description: 'Access Denied.' })
   async login(@Req() request) {
-    console.log('login', request);
     return this.authService.login(request);
   }
 
