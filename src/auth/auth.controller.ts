@@ -1,25 +1,20 @@
-import { Body, Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import { Controller, Get, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiCreatedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Public } from '../app.constants';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('/login')
-  @ApiBody({ required: true })
-  async login(@Res() response, @Body() req) {
-    console.log(req);
-    return this.authService.login(req.user);
+  @Public()
+  @Get('/login')
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ description: 'User login successfully.' })
+  @ApiUnprocessableEntityResponse({ description: 'Access Denied.' })
+  async login(@Req() request) {
+    return this.authService.login(request);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }

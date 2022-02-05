@@ -8,10 +8,11 @@ import { UsersController } from './modules/users/users.controller';
 import { CardModule } from './modules/card/card.module';
 import { UsersModule } from './modules/users/users.module';
 import { FilesModule } from './modules/files/files.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    // AuthModule,
+    AuthModule,
     FilesModule,
     BoardModule,
     ColumnModule,
@@ -21,7 +22,6 @@ import { FilesModule } from './modules/files/files.module';
   ],
   controllers: [
     UsersController,
-    // AuthController,
   ],
   providers: [
     SocketGateway,

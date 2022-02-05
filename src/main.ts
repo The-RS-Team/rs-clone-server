@@ -12,6 +12,18 @@ async function bootstrap() {
     .setTitle('TrelloClone API')
     .setDescription('TrelloClone API')
     .setVersion('1.0')
+    .setBasePath('api')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
