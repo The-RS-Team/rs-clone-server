@@ -13,7 +13,7 @@ export class CardService {
   }
 
   async getCards(): Promise<CardEntity[]> {
-    return this.CardRepository.find();
+    return this.CardRepository.find({ order: { position: 'ASC' } });
   }
 
   async getCard(id: string): Promise<CardEntity> {

@@ -3,6 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { FileEntity } from '../../files/models/files';
+import { CarditemEntity } from '../../carditem/models/carditem';
 
 @Entity('card')
 export class CardEntity {
@@ -36,4 +37,8 @@ export class CardEntity {
   @OneToMany(() => FileEntity, file => file.card, { eager: true })
   @JoinTable()
   public files: FileEntity[];
+
+  @OneToMany(() => CarditemEntity, cardItems => cardItems.card, { eager: true })
+  @JoinTable()
+  public cardItems: CarditemEntity[];
 }
