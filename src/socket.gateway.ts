@@ -25,6 +25,7 @@ import { CreateFilesDto } from './modules/files/dto/create-files.dto';
   transports: ['websocket'],
   serveClient: true,
 })
+
 export class SocketGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()

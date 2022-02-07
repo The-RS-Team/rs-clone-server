@@ -39,8 +39,6 @@ export class AuthMiddleware implements NestMiddleware {
             email: decodedToken.email,
             user_id: decodedToken.user_id,
             picture: decodedToken.picture,
-            iss: decodedToken.iss,
-            aud: decodedToken.aud,
           };
           console.log('\nToken: ', req['user']);
           next();

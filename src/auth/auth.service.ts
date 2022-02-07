@@ -17,8 +17,6 @@ export class AuthService {
     user.email = req['user'].email;
     user.user_id = req['user'].user_id;
     user.picture = req['user'].picture;
-    user.iss = req['user'].iss;
-    user.aud = req['user'].aud;
     this.usersService.create(user);
 
     const payload = {

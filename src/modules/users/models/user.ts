@@ -21,13 +21,5 @@ export class UserEntity {
   @ApiPropertyOptional({ type: String })
   @Column('text', {})
   public picture: string;
-
-  @ApiPropertyOptional({ type: String })
-  @Column('text', {})
-  public iss: string;
-
-  @ApiPropertyOptional({ type: String })
-  @Column('text', {})
-  public aud: string;
 }
 

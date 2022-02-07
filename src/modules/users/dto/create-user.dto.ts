@@ -19,12 +19,4 @@ export class CreateUserDto {
   @ApiPropertyOptional({ type: String })
   @Column('text', {})
   readonly picture: string;
-
-  @ApiPropertyOptional({ type: String })
-  @Column('text', {})
-  readonly iss: string;
-
-  @ApiPropertyOptional({ type: String })
-  @Column('text', {})
-  readonly aud: string;
 }
