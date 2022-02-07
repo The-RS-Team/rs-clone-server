@@ -9,6 +9,7 @@ import { CardModule } from './modules/card/card.module';
 import { UsersModule } from './modules/users/users.module';
 import { FilesModule } from './modules/files/files.module';
 import { AuthModule } from './auth/auth.module';
+import { CarditemModule } from './modules/carditem/carditem.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
     BoardModule,
     ColumnModule,
     CardModule,
+    CarditemModule,
     UsersModule,
     TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
   ],

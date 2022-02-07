@@ -1,23 +1,19 @@
 import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateCardDto {
+export class CreateCarditemDto {
   @ApiPropertyOptional({ type: String, nullable: false })
   @IsString()
   @IsNotEmpty()
-  readonly title: string;
+  readonly info: string;
 
   @ApiPropertyOptional({ type: String, nullable: false })
   @IsString()
   @IsNotEmpty()
-  readonly columnId: string;
+  readonly cardId: string;
 
-  @ApiPropertyOptional({ type: Number })
-  @IsInt()
-  @Min(0)
-  readonly position: number;
-
-  @ApiPropertyOptional({ type: String, nullable: true })
+  @ApiPropertyOptional({ type: String, nullable: false })
   @IsString()
-  readonly description: string;
+  @IsNotEmpty()
+  readonly userId: string;
 }

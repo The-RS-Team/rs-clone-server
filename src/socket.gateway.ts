@@ -19,6 +19,8 @@ import { UpdateColumnDto } from './modules/column/dto/update-column.dto';
 import { CreateColumnDto } from './modules/column/dto/create-column.dto';
 import { FilesService } from './modules/files/files.service';
 import { CreateFilesDto } from './modules/files/dto/create-files.dto';
+import { CarditemService } from './modules/carditem/carditem.service';
+import { CreateCarditemDto } from './modules/carditem/dto/create-cartitem.dto';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -36,6 +38,7 @@ export class SocketGateway
     private readonly cardService: CardService,
     private readonly columnService: ColumnService,
     private readonly filesService: FilesService,
+    private readonly carditemService: CarditemService,
   ) {
   }
 
@@ -188,6 +191,54 @@ export class SocketGateway
     if (data) {
       this.columnService.deleteColumn(data as string).then((deleteResult) => {
         this.server.emit(Messages.deleteColumn, deleteResult);
+      });
+    }
+  }
+
+  //Carditem
+  @SubscribeMessage(Messages.newCarditem)
+  newCarditem(
+    @MessageBody() data: CreateCarditemDto,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    if (data) {
+      this.carditemService
+        .create(data)
+        .then((data) => this.server.emit(Messages.newCarditem, data.id));
+    }
+  }
+
+  @SubscribeMessage(Messages.getCarditem)
+  getCarditem(
+    @MessageBody() data: any | string,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    if (data) {
+      this.carditemService
+        .getCarditem(data)
+        .then((file) => this.server.emit(Messages.getCarditem, file));
+    }
+  }
+
+  @SubscribeMessage(Messages.getCarditems)
+  getCarditems(
+    @MessageBody() data: any | string,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.carditemService
+        .getCarditems(data)
+        .then((files) => this.server.emit(Messages.getCarditems, files));
+    }
+  }
+
+  @SubscribeMessage(Messages.deleteCarditem)
+  deleteCarditem(
+    @MessageBody() data: any | string,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    if (data) {
+      this.carditemService.deleteCarditem(data).then((deleteResult) => {
+        this.server.emit(Messages.deleteCarditem, deleteResult);
       });
     }
   }

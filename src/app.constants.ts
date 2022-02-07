@@ -19,6 +19,10 @@ export enum Messages {
   newMessage = 'new_message',
   updateCard = 'update_card',
   updateColumn = 'update_column',
+  getCarditems = 'get_carditems',
+  newCarditem = 'new_carditem',
+  getCarditem = 'get_carditem',
+  deleteCarditem = 'delete_carditem',
 }
 
 export const jwtConstants = {
