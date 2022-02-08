@@ -11,6 +11,10 @@ export class AuthService {
   ) {
   }
 
+  private async validate(userEntity: UserEntity): Promise<UserEntity> {
+    return await this.usersService.getUser(userEntity.user_id);
+  }
+
   async login(req: Request): Promise<string> {
     const user = new UserEntity();
     user.name = req['user'].name;

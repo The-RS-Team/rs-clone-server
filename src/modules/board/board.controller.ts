@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put } from '
 import { BoardService } from './board.service';
 import { BoardEntity } from './models/board';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -18,6 +19,7 @@ export class BoardController {
   }
 
   @Get('/all')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Boards retrieved successfully.' })
   @ApiProperty({ default: [], isArray: true })
   async getBoards(): Promise<BoardEntity[]> {
@@ -25,6 +27,7 @@ export class BoardController {
   }
 
   @Get('/id/:id')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Board retrieved successfully.' })
   @ApiNotFoundResponse({ description: 'Board not found.' })
   async getBoardById(@Param('id', ParseUUIDPipe) id: string): Promise<BoardEntity> {
@@ -32,12 +35,14 @@ export class BoardController {
   }
 
   @Get('/fav')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Favorite boards retrieved successfully.' })
   async getBoardsFavorite(): Promise<BoardEntity[]> {
     return this.boardService.getBoardsFavorite();
   }
 
   @Post()
+  @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'Board created successfully.' })
   @ApiUnprocessableEntityResponse({ description: 'Board title already exists.' })
   async create(@Body() board: CreateBoardDto): Promise<BoardEntity> {
@@ -45,6 +50,7 @@ export class BoardController {
   }
 
   @Put()
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Post updated successfully.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   @ApiUnprocessableEntityResponse({ description: 'Post title already exists.' })
@@ -53,6 +59,7 @@ export class BoardController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Post deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   public delete(@Param('id', ParseUUIDPipe) id: string): Promise<DeleteResult> {

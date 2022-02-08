@@ -1,7 +1,7 @@
 import { Controller, Delete, Get, Param, ParseUUIDPipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
-import { ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiProperty } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiNotFoundResponse, ApiOkResponse, ApiProperty } from '@nestjs/swagger';
 import { CreateFilesDto } from './dto/create-files.dto';
 import { FileEntity } from './models/files';
 import { DeleteResult } from 'typeorm';
@@ -12,6 +12,7 @@ export class FilesController {
   }
 
   @Get('/all/:cardId')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Files retrieved successfully.' })
   @ApiProperty({ default: [], isArray: true })
   async getFiles(@Param('cardId', ParseUUIDPipe) cardId: string): Promise<FileEntity[]> {
@@ -19,6 +20,7 @@ export class FilesController {
   }
 
   @Get('/id/:id')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Files retrieved successfully.' })
   @ApiProperty({ default: [], isArray: true })
   async getFile(@Param('id', ParseUUIDPipe) id: string): Promise<FileEntity> {
@@ -37,6 +39,7 @@ export class FilesController {
       },
     },
   })
+  @ApiBearerAuth()
   @Post('upload/:cardid')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@Param('cardid', ParseUUIDPipe) cardid: string, @UploadedFile() file: CreateFilesDto): Promise<string> {
@@ -47,6 +50,7 @@ export class FilesController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   @ApiOkResponse({ description: 'Post deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   public delete(@Param('id', ParseUUIDPipe) id: string): Promise<DeleteResult> {

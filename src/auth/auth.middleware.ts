@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as firebase from 'firebase-admin';
-import * as serviceAccount from './firebaseServiceAccount.json';
+import * as serviceAccount from '../../firebaseServiceAccount.json';
 
 const firebase_params = {
   type: serviceAccount.type,
@@ -40,7 +40,6 @@ export class AuthMiddleware implements NestMiddleware {
             user_id: decodedToken.user_id,
             picture: decodedToken.picture,
           };
-          console.log('\nToken: ', req['user']);
           next();
         }).catch(errMessage => {
         AuthMiddleware.accessDenied(req.url, res, errMessage);
