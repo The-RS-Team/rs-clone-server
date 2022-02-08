@@ -20,6 +20,7 @@ export class FilesService {
       .addSelect('file.mimetype')
       .addSelect('file.size')
       .addSelect('file.cardId')
+      .addSelect('file.buffer')
       .where('file.cardId = :cardId', { cardId: cardId })
       .getMany();
   }

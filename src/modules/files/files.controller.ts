@@ -38,7 +38,6 @@ export class FilesController {
     },
   })
   @Post('upload/:cardid')
-  // @UseInterceptors(FileExtender)
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@Param('cardid', ParseUUIDPipe) cardid: string, @UploadedFile() file: CreateFilesDto): Promise<string> {
     if (file) {
