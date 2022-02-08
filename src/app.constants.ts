@@ -25,9 +25,5 @@ export enum Messages {
   deleteCarditem = 'delete_carditem',
 }
 
-export const jwtConstants = {
-  secret: 'c3225469f9f8508d624ebc366494cf17',
-};
-
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);

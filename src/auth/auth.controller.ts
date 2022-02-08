@@ -1,5 +1,5 @@
 import { Controller, Get, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from '../app.constants';
 
@@ -10,7 +10,6 @@ export class AuthController {
 
   @Public()
   @Get('/login')
-  @ApiBearerAuth()
   @ApiCreatedResponse({ description: 'User login successfully.' })
   @ApiUnprocessableEntityResponse({ description: 'Access Denied.' })
   async login(@Req() request) {
