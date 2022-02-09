@@ -23,6 +23,7 @@ export enum Messages {
   newCarditem = 'new_carditem',
   getCarditem = 'get_carditem',
   deleteCarditem = 'delete_carditem',
+  updateCarditem = 'update_carditem',
 }
 
 export const IS_PUBLIC_KEY = 'isPublic';

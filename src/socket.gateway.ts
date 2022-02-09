@@ -21,6 +21,7 @@ import { FilesService } from './modules/files/files.service';
 import { CreateFilesDto } from './modules/files/dto/create-files.dto';
 import { CarditemService } from './modules/carditem/carditem.service';
 import { CreateCarditemDto } from './modules/carditem/dto/create-cartitem.dto';
+import { UpdateCarditemDto } from './modules/carditem/dto/update-carditem.dto';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -204,7 +205,7 @@ export class SocketGateway
     if (data) {
       this.carditemService
         .create(data)
-        .then((data) => this.server.emit(Messages.newCarditem, data.id));
+        .then((carditem) => this.server.emit(Messages.newCarditem, carditem));
     }
   }
 
@@ -216,7 +217,7 @@ export class SocketGateway
     if (data) {
       this.carditemService
         .getCarditem(data)
-        .then((file) => this.server.emit(Messages.getCarditem, file));
+        .then((carditem) => this.server.emit(Messages.getCarditem, carditem));
     }
   }
 
@@ -227,7 +228,7 @@ export class SocketGateway
     if (data) {
       this.carditemService
         .getCarditems(data)
-        .then((files) => this.server.emit(Messages.getCarditems, files));
+        .then((carditem) => this.server.emit(Messages.getCarditems, carditem));
     }
   }
 
@@ -237,9 +238,23 @@ export class SocketGateway
     @ConnectedSocket() client: Socket,
   ): void {
     if (data) {
-      this.carditemService.deleteCarditem(data).then((deleteResult) => {
-        this.server.emit(Messages.deleteCarditem, deleteResult);
-      });
+      this.carditemService
+        .deleteCarditem(data)
+        .then((deleteResult) => {
+          this.server.emit(Messages.deleteCarditem, deleteResult);
+        });
+    }
+  }
+
+  @SubscribeMessage(Messages.updateCarditem)
+  updateCarditem(
+    @MessageBody() data: UpdateCarditemDto,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    if (data) {
+      this.carditemService
+        .updateCarditem(data as UpdateCarditemDto)
+        .then((carditem) => this.server.emit(Messages.updateCarditem, carditem));
     }
   }
 
