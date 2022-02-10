@@ -44,7 +44,11 @@ export class BoardService {
   }
 
   async deleteBoard(id: string): Promise<DeleteResult> {
-    return this.boardRepository.delete(id);
+    const deleteResultNode = await this.boardRepository.delete(id);
+    if (deleteResultNode.affected > 0) {
+      deleteResultNode.raw.push(id);
+    }
+    return deleteResultNode;
   }
 }
 

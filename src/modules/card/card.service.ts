@@ -40,7 +40,11 @@ export class CardService {
   }
 
   async deleteCard(id: string): Promise<DeleteResult> {
-    return this.CardRepository.delete(id);
+    const deleteResultNode = await this.CardRepository.delete(id);
+    if (deleteResultNode.affected > 0) {
+      deleteResultNode.raw.push(id);
+    }
+    return deleteResultNode;
   }
 }
 

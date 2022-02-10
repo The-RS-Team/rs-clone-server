@@ -20,7 +20,7 @@ import { CreateColumnDto } from './modules/column/dto/create-column.dto';
 import { FilesService } from './modules/files/files.service';
 import { CreateFilesDto } from './modules/files/dto/create-files.dto';
 import { CarditemService } from './modules/carditem/carditem.service';
-import { CreateCarditemDto } from './modules/carditem/dto/create-cartitem.dto';
+import { CreateCarditemDto } from './modules/carditem/dto/create-carditem.dto';
 import { UpdateCarditemDto } from './modules/carditem/dto/update-carditem.dto';
 
 @WebSocketGateway({

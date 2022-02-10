@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, getManager, Repository } from 'typeorm';
 import { CarditemEntity } from './models/carditem';
-import { CreateCarditemDto } from './dto/create-cartitem.dto';
+import { CreateCarditemDto } from './dto/create-carditem.dto';
 import { UpdateCarditemDto } from './dto/update-carditem.dto';
 
 @Injectable()
@@ -12,10 +12,9 @@ export class CarditemService {
     private readonly CarditemRepository: Repository<CarditemEntity>) {
   }
 
-  async getCarditems(cardId: string): Promise<CarditemEntity[]> {
-    return await this.CarditemRepository
-      .createQueryBuilder('carditem')
-      .innerJoin('carditem.userId', 'users')
+  async getCarditems(cardId: string): Promise<any[]> {
+    return await getManager()
+      .createQueryBuilder()
       .select([
         'carditem.id',
         'carditem.info',
@@ -24,6 +23,8 @@ export class CarditemService {
         'users.name',
         'users.picture',
       ])
+      .from(CarditemEntity, 'carditem')
+      .innerJoin('carditem.userId', 'users')
       .where('carditem.cardId = :cardId', { cardId: cardId })
       .orderBy('carditem.created', 'DESC')
       .getMany();
@@ -53,7 +54,11 @@ export class CarditemService {
   }
 
   async deleteCarditem(id: string): Promise<DeleteResult> {
-    return this.CarditemRepository.delete(id);
+    const deleteResultNode = await this.CarditemRepository.delete(id);
+    if (deleteResultNode.affected > 0) {
+      deleteResultNode.raw.push(id);
+    }
+    return deleteResultNode;
   }
 }
 

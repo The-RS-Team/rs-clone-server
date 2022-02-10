@@ -54,7 +54,11 @@ export class FilesService {
   }
 
   async deleteFile(id: string): Promise<DeleteResult> {
-    return this.filesEntityRepository.delete(id);
+    const deleteResultNode = await this.filesEntityRepository.delete(id);
+    if (deleteResultNode.affected > 0) {
+      deleteResultNode.raw.push(id);
+    }
+    return deleteResultNode;
   }
 }
 
