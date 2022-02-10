@@ -16,7 +16,7 @@ export class CardService {
     return this.CardRepository.find({ order: { position: 'ASC' } });
   }
 
-  async getCard(id: string): Promise<CardEntity> {
+  async getCard(id: string): Promise<UpdateCardDto> {
     return this.CardRepository.findOne(id);
   }
 
@@ -31,7 +31,7 @@ export class CardService {
     return this.CardRepository.update(item.id, item);
   }
 
-  async create(card: CreateCardDto): Promise<CardEntity> {
+  async create(card: CreateCardDto): Promise<UpdateCardDto> {
     const item = this.CardRepository.create(card);
     return this.CardRepository.save(item);
   }

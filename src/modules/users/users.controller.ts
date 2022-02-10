@@ -31,7 +31,7 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'User retrieved successfully.' })
   @ApiNotFoundResponse({ description: 'User not found.' })
-  async getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<UserEntity> {
+  async getUserById(@Param('id') id: string): Promise<UserEntity> {
     return this.usersService.getUser(id);
   }
 

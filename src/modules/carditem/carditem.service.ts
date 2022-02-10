@@ -15,11 +15,17 @@ export class CarditemService {
   async getCarditems(cardId: string): Promise<CarditemEntity[]> {
     return await this.CarditemRepository
       .createQueryBuilder('carditem')
-      .select('carditem.id')
-      .addSelect('carditem.info')
-      .addSelect('carditem.userid')
-      .addSelect('carditem.created')
+      .innerJoin('carditem.userId', 'users')
+      .select([
+        'carditem.id',
+        'carditem.info',
+        'carditem.userid',
+        'carditem.created',
+        'users.name',
+        'users.picture',
+      ])
       .where('carditem.cardId = :cardId', { cardId: cardId })
+      .orderBy('carditem.created', 'DESC')
       .getMany();
   }
 

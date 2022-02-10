@@ -37,7 +37,11 @@ export class ColumnService {
   }
 
   async deleteColumn(id: string): Promise<DeleteResult> {
-    return this.columnsRepository.delete(id);
+    const deleteResultNode = await this.columnsRepository.delete(id);
+    if (deleteResultNode.affected > 0) {
+      deleteResultNode.raw.push(id);
+    }
+    return deleteResultNode;
   }
 }
 

@@ -4,6 +4,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { FileEntity } from '../../files/models/files';
 import { CarditemEntity } from '../../carditem/models/carditem';
+import { Exclude } from 'class-transformer';
 
 @Entity('card')
 export class CardEntity {
@@ -32,6 +33,7 @@ export class CardEntity {
   public position: number;
 
   @ManyToOne(() => ColumnEntity, column => column.cards, { onDelete: 'CASCADE', nullable: false })
+  @Exclude({ toPlainOnly: true })
   public column: ColumnEntity;
 
   @OneToMany(() => FileEntity, file => file.card, { eager: true })

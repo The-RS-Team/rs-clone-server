@@ -59,7 +59,7 @@ export class SocketGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: Socket,
   ): void {
-    this.logger.log(data);
+    this.logger.log('createRoom', data.room);
     client.join(data.room);
   }
 
@@ -100,7 +100,7 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getCard)
   getCard(
-    @MessageBody() data: any | string,
+    @MessageBody() data: string,
     @ConnectedSocket() client: Socket,
   ): void {
     if (data) {
@@ -124,14 +124,12 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.deleteCard)
   deleteCard(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
-      this.cardService.deleteCard(data as string).then((deleteResult) => {
-        this.logger.log('deleteResult', deleteResult);
-        this.server.emit(Messages.deleteCard, deleteResult);
-      });
+      this.cardService
+        .deleteCard(data)
+        .then((deleteResult) => this.server.emit(Messages.deleteCard, deleteResult));
     }
   }
 
@@ -139,8 +137,7 @@ export class SocketGateway
   @SubscribeMessage(Messages.newColumn)
   newColumn(
     @MessageBody() data: CreateColumnDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
         .create(data as CreateColumnDto)
@@ -151,8 +148,7 @@ export class SocketGateway
   @SubscribeMessage(Messages.updateColumn)
   updateColumn(
     @MessageBody() data: UpdateColumnDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
         .updateColumn(data as UpdateColumnDto)
@@ -162,9 +158,8 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getColumn)
   getColumn(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
         .getColumn(data as string)
@@ -174,9 +169,8 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getColumns)
   getColumns(
-    @MessageBody() data: any | number,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: number,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
         .getColumns()
@@ -186,13 +180,12 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.deleteColumn)
   deleteColumn(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
-      this.columnService.deleteColumn(data as string).then((deleteResult) => {
-        this.server.emit(Messages.deleteColumn, deleteResult);
-      });
+      this.columnService
+        .deleteColumn(data)
+        .then((deleteResult) => this.server.emit(Messages.deleteColumn, deleteResult));
     }
   }
 
@@ -200,8 +193,7 @@ export class SocketGateway
   @SubscribeMessage(Messages.newCarditem)
   newCarditem(
     @MessageBody() data: CreateCarditemDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
         .create(data)
@@ -211,9 +203,8 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getCarditem)
   getCarditem(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
         .getCarditem(data)
@@ -223,7 +214,7 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getCarditems)
   getCarditems(
-    @MessageBody() data: any | string,
+    @MessageBody() data: string,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
@@ -234,23 +225,19 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.deleteCarditem)
   deleteCarditem(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
         .deleteCarditem(data)
-        .then((deleteResult) => {
-          this.server.emit(Messages.deleteCarditem, deleteResult);
-        });
+        .then((deleteResult) => this.server.emit(Messages.deleteCarditem, deleteResult));
     }
   }
 
   @SubscribeMessage(Messages.updateCarditem)
   updateCarditem(
     @MessageBody() data: UpdateCarditemDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
         .updateCarditem(data as UpdateCarditemDto)
@@ -262,8 +249,7 @@ export class SocketGateway
   @SubscribeMessage(Messages.newFile)
   newFile(
     @MessageBody() data: CreateFilesDto,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.filesService
         .create(data)
@@ -274,8 +260,7 @@ export class SocketGateway
   @SubscribeMessage(Messages.getFile)
   getFile(
     @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @ConnectedSocket() client: Socket): void {
     if (data) {
       this.filesService
         .getFile(data as string)
@@ -285,7 +270,7 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getFiles)
   getFiles(
-    @MessageBody() data: any | string,
+    @MessageBody() data: string,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.filesService
@@ -296,13 +281,12 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.deleteFile)
   deleteFile(
-    @MessageBody() data: any | string,
-    @ConnectedSocket() client: Socket,
-  ): void {
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket): void {
     if (data) {
-      this.filesService.deleteFile(data as string).then((deleteResult) => {
-        this.server.emit(Messages.deleteFile, deleteResult);
-      });
+      this.filesService
+        .deleteFile(data as string)
+        .then((deleteResult) => this.server.emit(Messages.deleteFile, deleteResult));
     }
   }
 }
