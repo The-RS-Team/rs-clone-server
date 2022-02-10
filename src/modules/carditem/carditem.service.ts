@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CarditemEntity } from './models/carditem';
 import { CreateCarditemDto } from './dto/create-cartitem.dto';
 import { UpdateCarditemDto } from './dto/update-carditem.dto';
@@ -33,15 +33,18 @@ export class CarditemService {
     return this.CarditemRepository.findOne(id);
   }
 
-  async updateCarditem(carditem: UpdateCarditemDto): Promise<UpdateResult> {
+  async updateCarditem(carditem: UpdateCarditemDto): Promise<CarditemEntity> {
     const item = await this.CarditemRepository.preload({
-      id: carditem.id,
-      ...carditem,
+      id: carditem.id, ...carditem,
     });
     if (!item) {
       throw new NotFoundException(`Item ${carditem.id} not found`);
     }
-    return this.CarditemRepository.update(item.id, item);
+    const updateResultNode = await this.CarditemRepository.update(item.id, item);
+    if (updateResultNode.affected > 0) {
+      return item;
+    }
+    return new CarditemEntity();
   }
 
   async create(card: CreateCarditemDto): Promise<CarditemEntity> {
