@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, getConnection, getManager, Repository } from 'typeorm';
 import { CarditemEntity } from './models/carditem';
 import { CreateCarditemDto } from './dto/create-carditem.dto';
 import { UpdateCarditemDto } from './dto/update-carditem.dto';
 import { UserEntity } from '../users/models/user';
+import { SelectCarditemDto } from './dto/select-carditem.dto';
 
 @Injectable()
 export class CarditemService {
@@ -13,20 +14,12 @@ export class CarditemService {
     private readonly CarditemRepository: Repository<CarditemEntity>) {
   }
 
-  async getCarditems(cardId: string): Promise<any[]> {
-    return await this.CarditemRepository
-      .createQueryBuilder()
-      .select('carditem.id')
-      .addSelect('carditem.info')
-      .addSelect('carditem.userId')
-      .addSelect('carditem.created')
-      .addSelect('users.name')
-      .addSelect('users.picture')
-      .from(CarditemEntity, 'carditem')
-      .leftJoinAndSelect(UserEntity, 'users', 'carditem.userId = users.user_id')
-      .where('carditem.cardId = :cardId', { cardId: cardId })
-      .orderBy('carditem.created', 'DESC')
-      .getMany();
+  async getCarditems(cardId: string): Promise<SelectCarditemDto[]> {
+    return await getManager()
+      .query('SELECT "carditem".*, "users".* ' +
+        'FROM "carditem" LEFT JOIN "users" ON "carditem"."userId" = "users"."user_id" ' +
+        'WHERE "carditem"."cardId" = $1 ' +
+        'ORDER BY "carditem"."created" DESC', [cardId]);
   }
 
   async getCarditem(id: string): Promise<CarditemEntity> {
