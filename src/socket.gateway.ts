@@ -219,7 +219,7 @@ export class SocketGateway
     if (data) {
       this.carditemService
         .getCarditems(data)
-        .then((carditem) => this.server.emit(Messages.getCarditems, carditem));
+        .then((carditems) => this.server.emit(Messages.getCarditems, carditems));
     }
   }
 

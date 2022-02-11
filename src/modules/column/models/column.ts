@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { BoardEntity } from '../../board/models/board';
@@ -30,9 +30,10 @@ export class ColumnEntity {
   public description: string;
 
   @ManyToOne(() => BoardEntity, board => board.columns, { onDelete: 'CASCADE', nullable: false })
+  @JoinColumn()
   public board: BoardEntity;
 
   @OneToMany(() => CardEntity, card => card.column, { eager: true })
-  @JoinTable()
+  @JoinColumn()
   public cards: CardEntity[];
 }

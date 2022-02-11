@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CardEntity } from '../../card/models/card';
@@ -10,6 +10,7 @@ export class FileEntity {
   public id: string;
 
   @ManyToOne(() => CardEntity, card => card.files, { onDelete: 'CASCADE', nullable: false })
+  @JoinColumn()
   public card: CardEntity;
 
   @ApiPropertyOptional({ type: String, nullable: false })

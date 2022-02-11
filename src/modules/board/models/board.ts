@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
@@ -27,6 +27,6 @@ export class BoardEntity {
   public background: string;
 
   @OneToMany(() => ColumnEntity, column => column.board)
-  @JoinTable()
+  @JoinColumn()
   public columns: ColumnEntity[];
 }
