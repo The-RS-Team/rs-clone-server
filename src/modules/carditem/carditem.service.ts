@@ -1,17 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, getConnection, getManager, Repository } from 'typeorm';
+import { DeleteResult, getManager, Repository } from 'typeorm';
 import { CarditemEntity } from './models/carditem';
 import { CreateCarditemDto } from './dto/create-carditem.dto';
 import { UpdateCarditemDto } from './dto/update-carditem.dto';
-import { UserEntity } from '../users/models/user';
 import { SelectCarditemDto } from './dto/select-carditem.dto';
+import { UserEntity } from '../users/models/user';
 
 @Injectable()
 export class CarditemService {
   constructor(
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
     @InjectRepository(CarditemEntity)
-    private readonly CarditemRepository: Repository<CarditemEntity>) {
+    private readonly CarditemRepository: Repository<CarditemEntity>,
+  ) {
   }
 
   async getCarditems(cardId: string): Promise<SelectCarditemDto[]> {
@@ -40,9 +43,11 @@ export class CarditemService {
     return new CarditemEntity();
   }
 
-  async create(card: CreateCarditemDto): Promise<CarditemEntity> {
+  async create(card: CreateCarditemDto): Promise<SelectCarditemDto> {
     const item = this.CarditemRepository.create(card);
-    return this.CarditemRepository.save(item);
+    const carditemEntity = await this.CarditemRepository.save(item);
+    const user = await this.usersRepository.findOne(item.userId);
+    return Object.assign({}, carditemEntity, user);
   }
 
   async deleteCarditem(id: string): Promise<DeleteResult> {
