@@ -22,10 +22,7 @@ export class UsersService {
   }
 
   async updateUser(user: UpdateUserDto): Promise<UpdateResult> {
-    const item = await this.usersRepository.preload({
-      user_id: user.user_id,
-      ...user,
-    });
+    const item = await this.usersRepository.preload({ user_id: user.user_id, ...user });
     if (!item) {
       throw new NotFoundException(`Item ${user.user_id} not found`);
     }

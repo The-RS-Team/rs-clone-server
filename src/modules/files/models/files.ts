@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CardEntity } from '../../card/models/card';
+import { Exclude } from 'class-transformer';
 
 @Entity('file')
 export class FileEntity {
@@ -38,7 +39,9 @@ export class FileEntity {
   @IsNotEmpty()
   public size: number;
 
+  @IsOptional()
+  @Exclude({ toPlainOnly: true })
   @ApiPropertyOptional({ type: 'bytea' })
-  @Column('bytea', {})
+  @Column('bytea', { select: false })
   public buffer: Buffer;
 }

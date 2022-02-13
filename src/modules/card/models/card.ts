@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { FileEntity } from '../../files/models/files';
@@ -37,10 +37,8 @@ export class CardEntity {
   public column: ColumnEntity;
 
   @OneToMany(() => FileEntity, file => file.card, { eager: true })
-  @JoinColumn()
   public files: FileEntity[];
 
-  @OneToMany(() => CarditemEntity, cardItems => cardItems.card, { eager: false })
-  @JoinColumn()
+  @OneToMany(() => CarditemEntity, cardItems => cardItems.card, { eager: true })
   public cardItems: CarditemEntity[];
 }
