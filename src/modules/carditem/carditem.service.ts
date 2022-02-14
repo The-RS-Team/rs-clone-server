@@ -26,7 +26,7 @@ export class CarditemService {
   }
 
   async getCarditem(id: string): Promise<CarditemEntity> {
-    return this.CarditemRepository.findOne(id);
+    return this.CarditemRepository.findOneOrFail(id);
   }
 
   async updateCarditem(carditem: UpdateCarditemDto): Promise<CarditemEntity> {

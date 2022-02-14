@@ -17,14 +17,11 @@ export class ColumnService {
   }
 
   async getColumn(id: string): Promise<ColumnEntity> {
-    return this.columnsRepository.findOne(id);
+    return this.columnsRepository.findOneOrFail(id);
   }
 
   async updateColumn(column: UpdateColumnDto): Promise<UpdateResult> {
-    const item = await this.columnsRepository.preload({
-      id: column.id,
-      ...column,
-    });
+    const item = await this.columnsRepository.preload({ id: column.id, ...column });
     if (!item) {
       throw new NotFoundException(`Item ${column.id} not found`);
     }

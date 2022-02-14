@@ -24,7 +24,7 @@ export class BoardService {
   }
 
   async getBoard(id: string): Promise<BoardEntity> {
-    return this.boardRepository.findOne(id, { relations: ['columns'] });
+    return this.boardRepository.findOneOrFail(id, { relations: ['columns'] });
   }
 
   async updateBoard(board: UpdateBoardDto): Promise<UpdateResult> {

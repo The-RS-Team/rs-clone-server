@@ -1,4 +1,5 @@
 import {
+  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
@@ -10,7 +11,6 @@ import {
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CardEntity } from '../../card/models/card';
-import { UserEntity } from '../../users/models/user';
 
 @Entity('carditem')
 export class CarditemEntity {

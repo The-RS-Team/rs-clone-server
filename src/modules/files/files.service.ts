@@ -26,18 +26,11 @@ export class FilesService {
   }
 
   async getFile(id: string): Promise<FileEntity> {
-    try {
-      return this.filesEntityRepository.findOne(id);
-    } catch (e) {
-      throw new NotFoundException(`Item ${id} not found`);
-    }
+    return this.filesEntityRepository.findOneOrFail(id);
   }
 
   async updateFile(filesEntity: FileEntity): Promise<UpdateResult> {
-    const item = await this.filesEntityRepository.preload({
-      id: filesEntity.id,
-      ...filesEntity,
-    });
+    const item = await this.filesEntityRepository.preload({ id: filesEntity.id, ...filesEntity });
     if (!item) {
       throw new NotFoundException(`Item ${filesEntity.id} not found`);
     }

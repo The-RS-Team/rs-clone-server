@@ -10,6 +10,7 @@ import { UsersModule } from './modules/users/users.module';
 import { FilesModule } from './modules/files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { CarditemModule } from './modules/carditem/carditem.module';
+import { UsersToBoardsModule } from './modules/userstoboards/userstoboards.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CarditemModule } from './modules/carditem/carditem.module';
     ColumnModule,
     CardModule,
     CarditemModule,
+    UsersToBoardsModule,
     UsersModule,
     TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
   ],

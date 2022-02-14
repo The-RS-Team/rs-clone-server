@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { AfterLoad, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { FileEntity } from '../../files/models/files';
@@ -41,4 +41,16 @@ export class CardEntity {
 
   @OneToMany(() => CarditemEntity, cardItems => cardItems.card, { eager: true })
   public cardItems: CarditemEntity[];
+
+  @AfterLoad()
+  getCardItemsCount() {
+    this.cardItemsCount = this.cardItems.length;
+  }
+  public cardItemsCount: number;
+
+  @AfterLoad()
+  getFilesCount() {
+    this.filesCount = this.files.length;
+  }
+  public filesCount: number;
 }

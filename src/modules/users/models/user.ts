@@ -22,4 +22,3 @@ export class UserEntity {
   @Column('text', {})
   public picture: string;
 }
-
