@@ -4,6 +4,7 @@ import { ColumnEntity } from './models/column';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateColumnDto } from './dto/create-column.dto';
 import { UpdateColumnDto } from './dto/update-column.dto';
+import { CardEntity } from '../card/models/card';
 
 @Injectable()
 export class ColumnService {
@@ -20,12 +21,12 @@ export class ColumnService {
     return this.columnsRepository.findOneOrFail(id);
   }
 
-  async updateColumn(column: UpdateColumnDto): Promise<UpdateResult> {
-    const item = await this.columnsRepository.preload({ id: column.id, ...column });
-    if (!item) {
-      throw new NotFoundException(`Item ${column.id} not found`);
+  async updateColumn(column: UpdateColumnDto): Promise<ColumnEntity> {
+    const updateResultNode = await this.columnsRepository.update(column.id, column);
+    if (updateResultNode.affected > 0) {
+      return this.getColumn(column.id);
     }
-    return this.columnsRepository.update(item.id, item);
+    return new ColumnEntity();
   }
 
   async create(column: CreateColumnDto): Promise<ColumnEntity> {
