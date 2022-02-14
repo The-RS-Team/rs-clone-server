@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
+import { UsersToBoardsEntity } from '../../userstoboards/models/userstoboards';
 
 @Entity('board')
 export class BoardEntity {
@@ -27,6 +28,8 @@ export class BoardEntity {
   public background: string;
 
   @OneToMany(() => ColumnEntity, column => column.board)
-  @JoinColumn()
   public columns: ColumnEntity[];
+
+  @OneToMany(() => UsersToBoardsEntity, usersToBoardsEntity => usersToBoardsEntity.board)
+  public usersToBoards: UsersToBoardsEntity[];
 }

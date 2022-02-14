@@ -30,10 +30,8 @@ export class ColumnEntity {
   public description: string;
 
   @ManyToOne(() => BoardEntity, board => board.columns, { onDelete: 'CASCADE', nullable: false })
-  @JoinColumn()
   public board: BoardEntity;
 
   @OneToMany(() => CardEntity, card => card.column, { eager: true })
-  @JoinColumn()
   public cards: CardEntity[];
 }

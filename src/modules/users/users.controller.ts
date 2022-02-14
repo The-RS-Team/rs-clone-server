@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { UsersService } from './users.service';
-import { UserEntity } from './models/user';
+import { UserEntity } from './models/users';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 

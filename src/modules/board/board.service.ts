@@ -12,33 +12,38 @@ export class BoardService {
     private readonly boardRepository: Repository<BoardEntity>) {
   }
 
-  async getBoards(): Promise<BoardEntity[]> {
-    return this.boardRepository.find();
-  }
-
-  async getBoardsFavorite(): Promise<BoardEntity[]> {
+  getBoards(userId: string): Promise<BoardEntity[]> {
     return this.boardRepository
       .createQueryBuilder('board')
-      .where('board.isFavorite=:isFavorite', { isFavorite: true })
+      .leftJoinAndSelect('board.usersToBoards', 'userstoboards')
+      .where('userstoboards.userUserId = :userId', { userId: userId })
       .getMany();
   }
 
-  async getBoard(id: string): Promise<BoardEntity> {
+  getBoardsFavorite(userId: string): Promise<BoardEntity[]> {
+    return this.boardRepository
+      .createQueryBuilder('board')
+      .leftJoinAndSelect('board.usersToBoards', 'userstoboards')
+      .where('userstoboards.userUserId = :userId', { userId: userId })
+      .andWhere('board.isFavorite=:isFavorite', { isFavorite: true })
+      .getMany();
+  }
+
+  getBoard(id: string): Promise<BoardEntity> {
     return this.boardRepository.findOneOrFail(id, { relations: ['columns'] });
   }
 
   async updateBoard(board: UpdateBoardDto): Promise<UpdateResult> {
-    const item = await this.boardRepository.preload({
-      id: board.id,
-      ...board,
-    });
+    const item = await this.boardRepository.findOneOrFail(board.id);
     if (!item) {
       throw new NotFoundException(`Item ${board.id} not found`);
     }
+    Object.assign(item, board);
+    delete item.usersToBoards;
     return this.boardRepository.update(item.id, item);
   }
 
-  async create(board: CreateBoardDto): Promise<BoardEntity> {
+  create(board: CreateBoardDto): Promise<BoardEntity> {
     const item = this.boardRepository.create(board);
     return this.boardRepository.save(item);
   }

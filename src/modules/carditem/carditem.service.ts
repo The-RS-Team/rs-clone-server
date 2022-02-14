@@ -5,7 +5,7 @@ import { CarditemEntity } from './models/carditem';
 import { CreateCarditemDto } from './dto/create-carditem.dto';
 import { UpdateCarditemDto } from './dto/update-carditem.dto';
 import { SelectCarditemDto } from './dto/select-carditem.dto';
-import { UserEntity } from '../users/models/user';
+import { UserEntity } from '../users/models/users';
 
 @Injectable()
 export class CarditemService {

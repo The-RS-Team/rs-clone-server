@@ -19,6 +19,6 @@ export class UserEntity {
   public name: string;
 
   @ApiPropertyOptional({ type: String })
-  @Column('text', {})
+  @Column('text', { nullable: true })
   public picture: string;
 }

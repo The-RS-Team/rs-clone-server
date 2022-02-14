@@ -17,6 +17,6 @@ export class CreateUserDto {
   readonly name: string;
 
   @ApiPropertyOptional({ type: String })
-  @Column('text', {})
+  @Column('text', { nullable: true })
   readonly picture: string;
 }

@@ -17,7 +17,7 @@ export class UpdateUserDto {
   readonly name: string;
 
   @ApiPropertyOptional({ type: String })
-  @Column('text', {})
+  @Column('text', { nullable: true })
   readonly picture: string;
 
   @ApiPropertyOptional({ type: String })

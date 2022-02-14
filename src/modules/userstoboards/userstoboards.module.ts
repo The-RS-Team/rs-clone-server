@@ -6,7 +6,6 @@ import { UsersToBoardsService } from './userstoboards.service';
 @Module({
   imports: [TypeOrmModule.forFeature([UsersToBoardsEntity])],
   providers: [UsersToBoardsService],
-  // controllers: [UsersController],
   exports: [UsersToBoardsService],
 })
 export class UsersToBoardsModule {
