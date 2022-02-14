@@ -27,6 +27,11 @@ export class CardEntity {
   @IsNotEmpty()
   public description: string;
 
+  @ApiPropertyOptional({ type: String, nullable: true })
+  @Column('varchar', { nullable: true })
+  @IsNotEmpty()
+  public cover: string;
+
   @ApiPropertyOptional({ type: Number, nullable: false })
   @Column('integer', { nullable: false })
   @IsNotEmpty()
