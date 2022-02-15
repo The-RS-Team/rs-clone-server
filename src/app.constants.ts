@@ -25,6 +25,3 @@ export enum Messages {
   deleteCarditem = 'delete_carditem',
   updateCarditem = 'update_carditem',
 }
-
-export const IS_PUBLIC_KEY = 'isPublic';
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);

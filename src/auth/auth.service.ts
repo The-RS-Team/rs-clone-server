@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../modules/users/users.service';
 import { UserEntity } from '../modules/users/models/users';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
   ) {
   }
 
@@ -23,13 +21,8 @@ export class AuthService {
     user.picture = req['user'].picture;
     this.usersService.create(user);
 
-    const payload = {
-      name: user.name,
-      user_id: user.user_id,
-    };
     return new Promise((resolve) => {
-      const token = { access_token: this.jwtService.sign(payload) };
-      resolve(JSON.stringify(token));
+      resolve(JSON.stringify(user));
     });
   }
 }
