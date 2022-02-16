@@ -42,7 +42,8 @@ export class FilesController {
   @ApiBearerAuth()
   @Post('upload/:cardid')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@Param('cardid', ParseUUIDPipe) cardid: string, @UploadedFile() file: CreateFilesDto): Promise<string> {
+  uploadFile(@Param('cardid', ParseUUIDPipe) cardid: string,
+             @UploadedFile() file: CreateFilesDto): Promise<string> {
     if (file) {
       file.cardId = cardid;
       return this.filesService.create(file).then(fileEntity => JSON.stringify({ id: fileEntity.id }));

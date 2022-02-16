@@ -25,3 +25,9 @@ export enum Messages {
   deleteCarditem = 'delete_carditem',
   updateCarditem = 'update_carditem',
 }
+
+export enum Actions {
+  insert = "insert",
+  delete = "delete",
+  update = "update"
+}

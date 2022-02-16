@@ -7,9 +7,11 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 
 @Injectable()
 export class BoardService {
+
   constructor(
     @InjectRepository(BoardEntity)
-    private readonly boardRepository: Repository<BoardEntity>) {
+    private readonly boardRepository: Repository<BoardEntity>,
+  ) {
   }
 
   getBoards(userId: string): Promise<BoardEntity[]> {
@@ -56,4 +58,5 @@ export class BoardService {
     return deleteResultNode;
   }
 }
+
 

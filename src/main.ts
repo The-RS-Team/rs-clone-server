@@ -29,6 +29,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
   app.setGlobalPrefix('');
   app.use(bodyParser.json({ limit: '10mb' }));
+  app.enableCors();
   app.use(bodyParser.urlencoded({
     limit: '10mb',
     parameterLimit: 100000,

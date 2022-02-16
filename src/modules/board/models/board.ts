@@ -1,11 +1,30 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  AfterInsert,
+  AfterRemove,
+  BaseEntity,
+  Column,
+  Entity,
+  InsertEvent,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  RemoveEvent,
+} from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { UsersToBoardsEntity } from '../../userstoboards/models/userstoboards';
+import { CurrentUser } from '../../../utils/decorators/user.decorator';
+import { UserEntity } from '../../users/models/users';
+import { Actions } from '../../../app.constants';
+import { ActivityService } from '../../activity/activity.service';
 
 @Entity('board')
-export class BoardEntity {
+export class BoardEntity extends BaseEntity {
+
+  constructor(private readonly activityService: ActivityService) {
+    super();
+  }
+
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')
   public id: string;
@@ -32,4 +51,17 @@ export class BoardEntity {
 
   @OneToMany(() => UsersToBoardsEntity, usersToBoardsEntity => usersToBoardsEntity.board)
   public usersToBoards: UsersToBoardsEntity[];
+
+  @AfterInsert()
+  async afterInsert(event: InsertEvent<BoardEntity>,
+                    @CurrentUser() user: UserEntity) {
+    console.log('AfterInsert BoardEntity');
+    this.activityService.create(Actions.insert, this.title, user);
+  }
+
+  @AfterRemove()
+  async afterRemove(event: RemoveEvent<BoardEntity>,
+                    @CurrentUser() user: UserEntity) {
+    this.activityService.create(Actions.delete, this.title, user);
+  }
 }
