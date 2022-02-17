@@ -22,6 +22,8 @@ export enum Messages {
   getCarditem = 'get_carditem',
   deleteCarditem = 'delete_carditem',
   updateCarditem = 'update_carditem',
+  getAtivityByUser = 'get_AtivityByUser',
+  getAtivityByBoard = 'get_AtivityByBoard',
 }
 
 export enum Actions {

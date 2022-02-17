@@ -26,8 +26,8 @@ export class ActivityEntity {
   @Column('text', { nullable: false })
   public userId: string;
 
-  @ApiPropertyOptional({ type: String })
-  @Column('text')
+  @ApiPropertyOptional({ type: String, nullable: false })
+  @Column('uuid', { nullable: true })
   public boardId: string;
 
   @ApiPropertyOptional({ type: String, nullable: true })

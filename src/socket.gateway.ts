@@ -78,14 +78,14 @@ export class SocketGateway
 
   //CardEntity
   @SubscribeMessage(Messages.newCard)
-  newCard(
+  async newCard(
     @MessageBody() data: CreateCardDto,
     @ConnectedSocket() client: Socket,
-  ): void {
+  ): Promise<void> {
     if (data) {
       if ('userId' in data) {
         const userId = data['userId'];
-        const boardId = this.getBoardByColumnId(data.columnId);
+        const boardId = await this.getBoardByColumnId(data.columnId);
         this.activityService.save(Actions.insert, boardId, userId, Tables.card, data.title);
         delete data['userId'];
       }
@@ -96,14 +96,14 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.updateCard)
-  updateCard(
+  async updateCard(
     @MessageBody() data: UpdateCardDto,
     @ConnectedSocket() client: Socket,
-  ): void {
+  ): Promise<void> {
     if (data) {
       if ('userId' in data) {
         const userId = data['userId'];
-        const boardId = this.getBoardByColumnId(data.columnId);
+        const boardId = await this.getBoardByColumnId(data.columnId);
         this.activityService.save(Actions.update, boardId, userId, Tables.card, data.title);
         delete data['userId'];
       }
@@ -191,9 +191,6 @@ export class SocketGateway
     @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
-      const boardId = this.columnService.getBoardId(data.id);
-      this.activityService.save(Actions.delete, boardId, data.userId, Tables.column, '');
-
       this.columnService
         .getColumn(data.id)
         .then((column) => this.server.emit(Messages.getColumn, column));
@@ -212,13 +209,12 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.deleteColumn)
-  deleteColumn(
+  async deleteColumn(
     @MessageBody() data: UserInterface,
-    @ConnectedSocket() client: Socket): void {
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
-      const boardId = this.columnService.getBoardId(data.id);
-      console.log('deleteColumn', data);
-      this.activityService.save(Actions.delete, boardId, data.userId, Tables.column, '');
+      const column = await this.columnService.getColumn(data.id);
+      this.activityService.save(Actions.delete, column.boardId, data.userId, Tables.column, column.title);
 
       this.columnService
         .deleteColumn(data.id)
@@ -354,11 +350,34 @@ export class SocketGateway
     }
   }
 
+  //Activity
+  @SubscribeMessage(Messages.getAtivityByUser)
+  getAtivityByUser(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.activityService
+        .getAtivityByUser(data.id)
+        .then((items) => this.server.emit(Messages.getAtivityByUser, items));
+    }
+  }
+
+  @SubscribeMessage(Messages.getAtivityByBoard)
+  getAtivityByBoard(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.activityService
+        .getAtivityByBoard(data.id)
+        .then((items) => this.server.emit(Messages.getAtivityByBoard, items));
+    }
+  }
+
   private async getBoardByColumnId(columnId: string): Promise<string> {
     const column = await this.columnService.getColumn(columnId);
     return column.boardId;
   }
-  
+
   private async getBoardIdByCardId(cardId: string): Promise<string> {
     const card = await this.cardService.getCard(cardId);
     const column = await this.columnService.getColumn(card.columnId);
