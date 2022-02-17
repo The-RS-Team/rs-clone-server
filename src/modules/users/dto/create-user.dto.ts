@@ -18,5 +18,13 @@ export class CreateUserDto {
 
   @ApiPropertyOptional({ type: String })
   @Column('text', { nullable: true })
+  public nickname: string;
+
+  @ApiPropertyOptional({ type: String })
+  @Column('text', { default: 'en' })
+  public lang: string;
+
+  @ApiPropertyOptional({ type: String })
+  @Column('text', { nullable: true })
   readonly picture: string;
 }
