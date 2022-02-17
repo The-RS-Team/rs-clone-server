@@ -22,3 +22,8 @@ export class UserEntity {
   @Column('text', { nullable: true })
   public picture: string;
 }
+
+export interface UserInterface {
+  userId: string;
+  id: string;
+}

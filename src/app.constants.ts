@@ -1,5 +1,3 @@
-import { SetMetadata } from '@nestjs/common';
-
 export enum Messages {
   connect = 'connect',
   createRoom = 'create_room',
@@ -27,7 +25,15 @@ export enum Messages {
 }
 
 export enum Actions {
-  insert = "insert",
-  delete = "delete",
-  update = "update"
+  insert = 'insert',
+  delete = 'delete',
+  update = 'update'
+}
+
+export enum Tables {
+  board = 'board',
+  card = 'card',
+  cardItem = 'cardItem',
+  column = 'column',
+  file = 'file'
 }

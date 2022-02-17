@@ -1,8 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Actions } from '../../../app.constants';
-import { UserEntity } from '../../users/models/users';
+import { Actions, Tables } from '../../../app.constants';
 
 @Entity('activity')
 export class ActivityEntity {
@@ -15,20 +14,31 @@ export class ActivityEntity {
   @Column({ type: 'enum', enum: Actions, default: Actions.update })
   public action: Actions;
 
-  @CreateDateColumn({ nullable: false })
-  created: Date;
+  @ApiProperty({ enum: ['board', 'card', 'cardItem', 'column', 'file'] })
+  @IsNotEmpty()
+  @Column({ type: 'enum', enum: Tables })
+  public table: Tables;
 
-  @ManyToOne(() => UserEntity, { cascade: true, onDelete: 'NO ACTION', onUpdate: 'NO ACTION', nullable: false })
-  @JoinColumn()
-  public user: UserEntity;
+  @CreateDateColumn({ nullable: false })
+  public created: Date;
+
+  @ApiPropertyOptional({ type: String, nullable: false })
+  @Column('text', { nullable: false })
+  public userId: string;
 
   @ApiPropertyOptional({ type: String })
-  @Column('text', {})
+  @Column('text')
+  public boardId: string;
+
+  @ApiPropertyOptional({ type: String, nullable: true })
+  @Column('text', { nullable: true })
   public info: string;
 
-  constructor(action: Actions, info: string, user: UserEntity) {
+  constructor(action: Actions, boardId: string, userId: string, table: Tables, info: string) {
     this.action = action;
     this.info = info;
-    this.user = user;
+    this.userId = userId;
+    this.boardId = boardId;
+    this.table = table;
   }
 }

@@ -15,11 +15,14 @@ import { UpdateBoardDto } from './dto/update-board.dto';
 import { UserEntity } from '../users/models/users';
 import { CurrentUser } from '../../utils/decorators/user.decorator';
 import { UsersToBoardsService } from '../userstoboards/userstoboards.service';
+import { ActivityService } from '../activity/activity.service';
+import { Actions, Tables } from '../../app.constants';
 
 @Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService,
-              private readonly usersToBoardsService: UsersToBoardsService) {
+              private readonly usersToBoardsService: UsersToBoardsService,
+              private readonly activityService: ActivityService) {
   }
 
   @Get('/all')
@@ -52,8 +55,8 @@ export class BoardController {
   async create(@Body() board: CreateBoardDto,
                @CurrentUser() user: UserEntity): Promise<BoardEntity> {
     const newBoard = await this.boardService.create(board);
-    console.log('CreateBoard', user.user_id, newBoard.id);
     await this.usersToBoardsService.create(user, newBoard, true);
+    this.activityService.save(Actions.insert, newBoard.id, user.user_id, Tables.board, newBoard.title);
     return newBoard;
   }
 
@@ -62,8 +65,9 @@ export class BoardController {
   @ApiOkResponse({ description: 'Post updated successfully.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
   @ApiUnprocessableEntityResponse({ description: 'Post title already exists.' })
-  public update(@Body() board: UpdateBoardDto,
-                @CurrentUser() user: UserEntity): Promise<UpdateResult> {
+  async update(@Body() board: UpdateBoardDto,
+               @CurrentUser() user: UserEntity): Promise<UpdateResult> {
+    this.activityService.save(Actions.update, board.id, user.user_id, Tables.board, board.title);
     return this.boardService.updateBoard(board);
   }
 
@@ -71,8 +75,9 @@ export class BoardController {
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Post deleted successfully.' })
   @ApiNotFoundResponse({ description: 'Post not found.' })
-  public delete(@Param('id', ParseUUIDPipe) id: string,
-                @CurrentUser() user: UserEntity): Promise<DeleteResult> {
+  async delete(@Param('id', ParseUUIDPipe) id: string,
+               @CurrentUser() user: UserEntity): Promise<DeleteResult> {
+    this.activityService.save(Actions.delete, id, user.user_id, Tables.board, '');
     return this.boardService.deleteBoard(id);
   }
 }
