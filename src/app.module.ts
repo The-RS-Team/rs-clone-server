@@ -11,7 +11,7 @@ import { FilesModule } from './modules/files/files.module';
 import { AuthModule } from './auth/auth.module';
 import { CarditemModule } from './modules/carditem/carditem.module';
 import { UsersToBoardsModule } from './modules/userstoboards/userstoboards.module';
-import { UsersToBoardsService } from './modules/userstoboards/userstoboards.service';
+import { ActivityModule } from './modules/activity/activity.module';
 
 @Module({
   imports: [
@@ -23,6 +23,7 @@ import { UsersToBoardsService } from './modules/userstoboards/userstoboards.serv
     CarditemModule,
     UsersToBoardsModule,
     UsersModule,
+    ActivityModule,
     TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
   ],
   controllers: [

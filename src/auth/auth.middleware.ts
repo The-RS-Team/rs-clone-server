@@ -45,7 +45,7 @@ export class AuthMiddleware implements NestMiddleware {
         AuthMiddleware.accessDenied(req.url, res, errMessage);
       });
     } else {
-      next();
+      AuthMiddleware.accessDenied(req.url, res, '');
     }
   }
 

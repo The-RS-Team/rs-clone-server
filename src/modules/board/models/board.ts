@@ -6,6 +6,7 @@ import { UsersToBoardsEntity } from '../../userstoboards/models/userstoboards';
 
 @Entity('board')
 export class BoardEntity {
+
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')
   public id: string;

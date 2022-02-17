@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { Messages } from './app.constants';
+import { Actions, Messages, Tables } from './app.constants';
 import { CardService } from './modules/card/card.service';
 import { ColumnService } from './modules/column/column.service';
 import { CreateCardDto } from './modules/card/dto/create-card.dto';
@@ -22,6 +22,8 @@ import { CreateFilesDto } from './modules/files/dto/create-files.dto';
 import { CarditemService } from './modules/carditem/carditem.service';
 import { CreateCarditemDto } from './modules/carditem/dto/create-carditem.dto';
 import { UpdateCarditemDto } from './modules/carditem/dto/update-carditem.dto';
+import { ActivityService } from './modules/activity/activity.service';
+import { UserInterface } from './modules/users/models/users';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -40,6 +42,7 @@ export class SocketGateway
     private readonly columnService: ColumnService,
     private readonly filesService: FilesService,
     private readonly carditemService: CarditemService,
+    private readonly activityService: ActivityService,
   ) {
   }
 
@@ -75,11 +78,17 @@ export class SocketGateway
 
   //CardEntity
   @SubscribeMessage(Messages.newCard)
-  newCard(
+  async newCard(
     @MessageBody() data: CreateCardDto,
     @ConnectedSocket() client: Socket,
-  ): void {
+  ): Promise<void> {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        const boardId = await this.getBoardByColumnId(data.columnId);
+        this.activityService.save(Actions.insert, boardId, userId, Tables.card, data.title);
+        delete data['userId'];
+      }
       this.cardService
         .create(data)
         .then((card) => this.server.emit(Messages.newCard, card));
@@ -87,11 +96,17 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.updateCard)
-  updateCard(
+  async updateCard(
     @MessageBody() data: UpdateCardDto,
     @ConnectedSocket() client: Socket,
-  ): void {
+  ): Promise<void> {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        const boardId = await this.getBoardByColumnId(data.columnId);
+        this.activityService.save(Actions.update, boardId, userId, Tables.card, data.title);
+        delete data['userId'];
+      }
       this.cardService
         .updateCard(data)
         .then((card) => this.server.emit(Messages.updateCard, card));
@@ -100,19 +115,19 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getCard)
   getCard(
-    @MessageBody() data: string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket,
   ): void {
     if (data) {
       this.cardService
-        .getCard(data)
+        .getCard(data.id)
         .then((card) => this.server.emit(Messages.getCard, card));
     }
   }
 
   @SubscribeMessage(Messages.getCards)
   getCards(
-    @MessageBody() data: any | string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket,
   ): void {
     if (data) {
@@ -123,12 +138,15 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.deleteCard)
-  deleteCard(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket): void {
+  async deleteCard(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      const boardId = await this.getBoardIdByCardId(data.id);
+      this.activityService.save(Actions.delete, boardId, data.userId, Tables.card, '');
+
       this.cardService
-        .deleteCard(data)
+        .deleteCard(data.id)
         .then((deleteResult) => this.server.emit(Messages.deleteCard, deleteResult));
     }
   }
@@ -139,6 +157,12 @@ export class SocketGateway
     @MessageBody() data: CreateColumnDto,
     @ConnectedSocket() client: Socket): void {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        this.activityService.save(Actions.insert, data.boardId, userId, Tables.column, data.title);
+        delete data['userId'];
+      }
+
       this.columnService
         .create(data as CreateColumnDto)
         .then((column) => this.server.emit(Messages.newColumn, column));
@@ -150,6 +174,12 @@ export class SocketGateway
     @MessageBody() data: UpdateColumnDto,
     @ConnectedSocket() client: Socket): void {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        this.activityService.save(Actions.update, data.boardId, userId, Tables.column, data.title);
+        delete data['userId'];
+      }
+
       this.columnService
         .updateColumn(data as UpdateColumnDto)
         .then((column) => this.server.emit(Messages.updateColumn, column));
@@ -158,18 +188,18 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getColumn)
   getColumn(
-    @MessageBody() data: string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
-        .getColumn(data as string)
+        .getColumn(data.id)
         .then((column) => this.server.emit(Messages.getColumn, column));
     }
   }
 
   @SubscribeMessage(Messages.getColumns)
   getColumns(
-    @MessageBody() data: number,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.columnService
@@ -179,22 +209,28 @@ export class SocketGateway
   }
 
   @SubscribeMessage(Messages.deleteColumn)
-  deleteColumn(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket): void {
+  async deleteColumn(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      const column = await this.columnService.getColumn(data.id);
+      this.activityService.save(Actions.delete, column.boardId, data.userId, Tables.column, column.title);
+
       this.columnService
-        .deleteColumn(data)
+        .deleteColumn(data.id)
         .then((deleteResult) => this.server.emit(Messages.deleteColumn, deleteResult));
     }
   }
 
   //Carditem
   @SubscribeMessage(Messages.newCarditem)
-  newCarditem(
+  async newCarditem(
     @MessageBody() data: CreateCarditemDto,
-    @ConnectedSocket() client: Socket): void {
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      const boardId = await this.getBoardIdByCardId(data.cardId);
+      this.activityService.save(Actions.insert, boardId, data.userId, Tables.cardItem, data.info);
+
       this.carditemService
         .create(data)
         .then((carditem) => this.server.emit(Messages.newCarditem, carditem));
@@ -203,42 +239,51 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getCarditem)
   getCarditem(
-    @MessageBody() data: string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
-        .getCarditem(data)
+        .getCarditem(data.id)
         .then((carditem) => this.server.emit(Messages.getCarditem, carditem));
     }
   }
 
   @SubscribeMessage(Messages.getCarditems)
   getCarditems(
-    @MessageBody() data: string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.carditemService
-        .getCarditems(data)
+        .getCarditems(data.id)
         .then((carditems) => this.server.emit(Messages.getCarditems, carditems));
     }
   }
 
   @SubscribeMessage(Messages.deleteCarditem)
-  deleteCarditem(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket): void {
+  async deleteCarditem(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      const boardId = await this.getBoardIdByCardItemId(data.id);
+      this.activityService.save(Actions.delete, boardId, data.userId, Tables.cardItem, '');
+
       this.carditemService
-        .deleteCarditem(data)
+        .deleteCarditem(data.id)
         .then((deleteResult) => this.server.emit(Messages.deleteCarditem, deleteResult));
     }
   }
 
   @SubscribeMessage(Messages.updateCarditem)
-  updateCarditem(
+  async updateCarditem(
     @MessageBody() data: UpdateCarditemDto,
-    @ConnectedSocket() client: Socket): void {
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        const boardId = await this.getBoardIdByCardItemId(data.id);
+        this.activityService.save(Actions.update, boardId, userId, Tables.cardItem, data.info);
+        delete data['userId'];
+      }
       this.carditemService
         .updateCarditem(data as UpdateCarditemDto)
         .then((carditem) => this.server.emit(Messages.updateCarditem, carditem));
@@ -247,10 +292,17 @@ export class SocketGateway
 
   //Files
   @SubscribeMessage(Messages.newFile)
-  newFile(
+  async newFile(
     @MessageBody() data: CreateFilesDto,
-    @ConnectedSocket() client: Socket): void {
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        const boardId = await this.getBoardIdByCardId(data.cardId);
+        this.activityService.save(Actions.insert, boardId, userId, Tables.file, data.originalname);
+        delete data['userId'];
+      }
+
       this.filesService
         .create(data)
         .then((data) => this.server.emit(Messages.newFile, data.id));
@@ -259,34 +311,83 @@ export class SocketGateway
 
   @SubscribeMessage(Messages.getFile)
   getFile(
-    @MessageBody() data: any | string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.filesService
-        .getFile(data as string)
+        .getFile(data.id)
         .then((file) => this.server.emit(Messages.getFile, file));
     }
   }
 
   @SubscribeMessage(Messages.getFiles)
   getFiles(
-    @MessageBody() data: string,
+    @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): void {
     if (data) {
       this.filesService
-        .getFiles(data)
+        .getFiles(data.id)
         .then((files) => this.server.emit(Messages.getFiles, files));
     }
   }
 
   @SubscribeMessage(Messages.deleteFile)
-  deleteFile(
-    @MessageBody() data: string,
-    @ConnectedSocket() client: Socket): void {
+  async deleteFile(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
+      if ('userId' in data) {
+        const userId = data['userId'];
+        const file = await this.filesService.getFile(data.id);
+        const boardId = await this.getBoardIdByCardId(file.cardId);
+        this.activityService.save(Actions.delete, boardId, userId, Tables.file, file.originalname);
+        delete data['userId'];
+      }
+
       this.filesService
-        .deleteFile(data as string)
+        .deleteFile(data.id)
         .then((deleteResult) => this.server.emit(Messages.deleteFile, deleteResult));
     }
   }
+
+  //Activity
+  @SubscribeMessage(Messages.getAtivityByUser)
+  getAtivityByUser(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.activityService
+        .getAtivityByUser(data.id)
+        .then((items) => this.server.emit(Messages.getAtivityByUser, items));
+    }
+  }
+
+  @SubscribeMessage(Messages.getAtivityByBoard)
+  getAtivityByBoard(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.activityService
+        .getAtivityByBoard(data.id)
+        .then((items) => this.server.emit(Messages.getAtivityByBoard, items));
+    }
+  }
+
+  private async getBoardByColumnId(columnId: string): Promise<string> {
+    const column = await this.columnService.getColumn(columnId);
+    return column.boardId;
+  }
+
+  private async getBoardIdByCardId(cardId: string): Promise<string> {
+    const card = await this.cardService.getCard(cardId);
+    const column = await this.columnService.getColumn(card.columnId);
+    return column.boardId;
+  };
+
+  private async getBoardIdByCardItemId(cardItemId: string): Promise<string> {
+    const cardItem = await this.carditemService.getCarditem(cardItemId);
+    const card = await this.cardService.getCard(cardItem.cardId);
+    const column = await this.columnService.getColumn(card.columnId);
+    return column.boardId;
+  };
 }

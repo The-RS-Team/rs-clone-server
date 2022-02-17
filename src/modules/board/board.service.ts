@@ -4,12 +4,15 @@ import { BoardEntity } from './models/board';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
+import { ActivityService } from '../activity/activity.service';
 
 @Injectable()
 export class BoardService {
+
   constructor(
     @InjectRepository(BoardEntity)
-    private readonly boardRepository: Repository<BoardEntity>) {
+    private readonly boardRepository: Repository<BoardEntity>
+  ) {
   }
 
   getBoards(userId: string): Promise<BoardEntity[]> {
@@ -56,4 +59,5 @@ export class BoardService {
     return deleteResultNode;
   }
 }
+
 

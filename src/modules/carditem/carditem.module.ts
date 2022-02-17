@@ -6,9 +6,7 @@ import { UserEntity } from '../users/models/users';
 
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([CarditemEntity, UserEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([CarditemEntity, UserEntity])],
   providers: [CarditemService],
   exports: [CarditemService],
 })
