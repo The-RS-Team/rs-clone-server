@@ -13,6 +13,7 @@ import { CarditemModule } from './modules/carditem/carditem.module';
 import { UsersToBoardsModule } from './modules/userstoboards/userstoboards.module';
 import { ActivityModule } from './modules/activity/activity.module';
 import { InviteModule } from './modules/invite/invite.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { InviteModule } from './modules/invite/invite.module';
     ActivityModule,
     InviteModule,
     TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
+    MailModule,
   ],
   controllers: [
     UsersController,

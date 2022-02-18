@@ -26,6 +26,7 @@ import { UserInterface } from './modules/users/models/users';
 import { ActivityService } from './modules/activity/activity.service';
 import { InviteService } from './modules/invite/invite.service';
 import { InviteEntity } from './modules/invite/models/invite';
+import { MailService } from './mail/mail.service';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -46,6 +47,7 @@ export class SocketGateway
     private readonly carditemService: CarditemService,
     private readonly activityService: ActivityService,
     private readonly inviteService: InviteService,
+    private readonly mailService: MailService,
   ) {
   }
 
@@ -383,6 +385,7 @@ export class SocketGateway
     @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
       console.log('newInvite', data);
+      this.mailService.sendMail(data.email);
       this.inviteService
         .create(data)
         .then((data) => this.server.emit(Messages.newInvite, data));

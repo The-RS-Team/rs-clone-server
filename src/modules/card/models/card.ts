@@ -6,7 +6,7 @@ import { FileEntity } from '../../files/models/files';
 import { CarditemEntity } from '../../carditem/models/carditem';
 import { Exclude } from 'class-transformer';
 
-@Entity('card')
+@Entity('card', { orderBy: { position: 'ASC' } })
 export class CardEntity {
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')
@@ -51,11 +51,13 @@ export class CardEntity {
   getCardItemsCount() {
     this.cardItemsCount = this.cardItems.length;
   }
+
   public cardItemsCount: number;
 
   @AfterLoad()
   getFilesCount() {
     this.filesCount = this.files.length;
   }
+
   public filesCount: number;
 }
