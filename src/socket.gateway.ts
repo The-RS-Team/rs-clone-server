@@ -400,6 +400,18 @@ export class SocketGateway
     }
   }
 
+  @SubscribeMessage(Messages.getInviteByEmail)
+  async getInviteByEmail(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.inviteService
+        .getInviteByEmail(data.id)
+        .then((data) => this.server.emit(Messages.getInviteByEmail, data));
+    }
+  }
+
+
   @SubscribeMessage(Messages.deleteInvite)
   async deleteInvite(
     @MessageBody() data: UserInterface,

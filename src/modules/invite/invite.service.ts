@@ -14,12 +14,26 @@ export class InviteService {
     return this.inviteEntityRepository.findOneOrFail(id);
   }
 
+  async getInviteByEmail(email: string): Promise<InviteEntity> {
+    return this.inviteEntityRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
+  }
+
   async create(inviteEntity: InviteEntity): Promise<InviteEntity> {
+    let invite: InviteEntity;
+    inviteEntity.email = inviteEntity.email.toLowerCase();
     try {
-      const item = this.inviteEntityRepository.create(inviteEntity);
-      return this.inviteEntityRepository.save(item);
+      invite = await this.getInviteByEmail(inviteEntity.email);
+      if (!invite) {
+        invite = this.inviteEntityRepository.create(inviteEntity);
+        return this.inviteEntityRepository.save(invite);
+      }
+      return invite;
     } catch (e) {
-      console.log('createInvite: ', e);
+
     }
   }
 
