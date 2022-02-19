@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
@@ -33,4 +33,6 @@ export class BoardEntity {
 
   @OneToMany(() => UsersToBoardsEntity, usersToBoardsEntity => usersToBoardsEntity.board)
   public usersToBoards: UsersToBoardsEntity[];
+
+  public isOwner: string;
 }

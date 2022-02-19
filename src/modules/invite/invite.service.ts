@@ -2,12 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { InviteEntity } from './models/invite';
+import { UsersService } from '../users/users.service';
+import { UsersToBoardsService } from '../userstoboards/userstoboards.service';
+import { BoardService } from '../board/board.service';
 
 @Injectable()
 export class InviteService {
   constructor(
     @InjectRepository(InviteEntity)
-    private readonly inviteEntityRepository: Repository<InviteEntity>) {
+    private readonly inviteEntityRepository: Repository<InviteEntity>,
+    private readonly usersService: UsersService,
+    private readonly usersToBoardsService: UsersToBoardsService,
+    private readonly boardService: BoardService,
+  ) {
   }
 
   async getInvite(id: string): Promise<InviteEntity> {
@@ -23,16 +30,27 @@ export class InviteService {
   }
 
   async checkInvitesByEmail(email: string): Promise<InviteEntity[]> {
-    console.log('checkInvitesByEmail');
-    return this.inviteEntityRepository.find({
+    const invites = await this.inviteEntityRepository.find({
       where: {
         email: email,
       },
     });
+    if (invites.length > 0) {
+      const user = await this.usersService.getUserByEmail(email);
+      if (user) {
+        invites.forEach(invite => {
+          this.boardService.getBoard(invite.boardId).then(board => {
+            this.usersToBoardsService.create(user, board, false);
+            this.inviteEntityRepository.delete(invite.id);
+          });
+        });
+      }
+    }
+    return invites;
   }
 
   async getInviteByBoard(email: string, boardId: string): Promise<InviteEntity> {
-    return this.inviteEntityRepository.findOneOrFail({
+    return this.inviteEntityRepository.findOne({
       where: {
         email: email,
         boardId: boardId,
@@ -46,7 +64,7 @@ export class InviteService {
     try {
       invite = await this.getInviteByBoard(inviteEntity.email, inviteEntity.boardId);
       if (!invite) {
-        invite = this.inviteEntityRepository.create(inviteEntity);
+        invite = await this.inviteEntityRepository.create(inviteEntity);
         return this.inviteEntityRepository.save(invite);
       }
       return invite;

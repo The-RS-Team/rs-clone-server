@@ -14,6 +14,7 @@ import { ActivityModule } from '../activity/activity.module';
   ],
   controllers: [BoardController],
   providers: [BoardService],
+  exports: [BoardService],
 })
 
 export class BoardModule {
