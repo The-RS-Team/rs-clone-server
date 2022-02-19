@@ -20,7 +20,7 @@ export class ActivityService {
   async getAtivityByUser(userId: string): Promise<any[]> {
     return getManager()
       .query('SELECT "activity".*, "users".*, "board".* ' +
-        'FROM "activity" LEFT JOIN "users" ON "activity"."userUserId" = "users"."user_id" ' +
+        'FROM "activity" LEFT JOIN "users" ON "activity"."userId" = "users"."user_id" ' +
         '                LEFT JOIN "board" ON "activity"."boardId" = "board"."id" ' +
         ' WHERE "activity"."userId" = $1 ' +
         ' ORDER BY "activity"."created" DESC', [userId]);
@@ -29,7 +29,7 @@ export class ActivityService {
   async getAtivityByBoard(boardId: string): Promise<any[]> {
     return getManager()
       .query('SELECT "activity".*, "users".*, "board".* ' +
-        'FROM "activity" LEFT JOIN "users" ON "activity"."userUserId" = "users"."user_id" ' +
+        'FROM "activity" LEFT JOIN "users" ON "activity"."userId" = "users"."user_id" ' +
         '                LEFT JOIN "board" ON "activity"."boardId" = "board"."id" ' +
         ' WHERE "activity"."boardId" = $1 ' +
         ' ORDER BY "activity"."created" DESC', [boardId]);

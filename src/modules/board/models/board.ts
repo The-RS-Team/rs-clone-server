@@ -1,11 +1,14 @@
-import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ColumnEntity } from '../../column/models/column';
 import { UsersToBoardsEntity } from '../../userstoboards/models/userstoboards';
+import { UsersToBoardsService } from '../../userstoboards/userstoboards.service';
 
 @Entity('board')
 export class BoardEntity {
+  constructor(private readonly usersToBoardsService: UsersToBoardsService) {
+  }
 
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')
@@ -33,6 +36,4 @@ export class BoardEntity {
 
   @OneToMany(() => UsersToBoardsEntity, usersToBoardsEntity => usersToBoardsEntity.board)
   public usersToBoards: UsersToBoardsEntity[];
-
-  public isOwner: string;
 }

@@ -28,6 +28,8 @@ export enum Messages {
   getInvite = 'get_invite',
   checkInvitesByEmail = 'check_invitesbyemail',
   deleteInvite = 'delete_invite',
+  deleteUsersToBoards = 'delete_userstoboards',
+  getUsersToBoards = 'get_userstoboards',
 }
 
 export enum Actions {

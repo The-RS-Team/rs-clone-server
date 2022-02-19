@@ -27,6 +27,7 @@ import { ActivityService } from './modules/activity/activity.service';
 import { InviteService } from './modules/invite/invite.service';
 import { InviteEntity } from './modules/invite/models/invite';
 import { MailService } from './mail/mail.service';
+import { UsersToBoardsService } from './modules/userstoboards/userstoboards.service';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -48,6 +49,7 @@ export class SocketGateway
     private readonly activityService: ActivityService,
     private readonly inviteService: InviteService,
     private readonly mailService: MailService,
+    private readonly usersToBoardsService: UsersToBoardsService,
   ) {
   }
 
@@ -415,7 +417,6 @@ export class SocketGateway
     }
   }
 
-
   @SubscribeMessage(Messages.deleteInvite)
   async deleteInvite(
     @MessageBody() data: UserInterface,
@@ -424,6 +425,29 @@ export class SocketGateway
       this.inviteService
         .deleteInvite(data.id)
         .then((deleteResult) => this.server.emit(Messages.deleteInvite, deleteResult));
+    }
+  }
+
+  //UsersToBoards
+  @SubscribeMessage(Messages.deleteUsersToBoards)
+  async deleteUsersToBoards(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.usersToBoardsService
+        .deleteItem(data.id)
+        .then((deleteResult) => this.server.emit(Messages.deleteUsersToBoards, deleteResult));
+    }
+  }
+
+  @SubscribeMessage(Messages.getUsersToBoards)
+  getUsersToBoards(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.usersToBoardsService
+        .getItemByBoard(data.id)
+        .then((files) => this.server.emit(Messages.getUsersToBoards, files));
     }
   }
 
