@@ -384,11 +384,12 @@ export class SocketGateway
     @MessageBody() data: InviteEntity,
     @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
-      console.log('newInvite', data);
-      this.mailService.sendMail(data.email);
       this.inviteService
         .create(data)
-        .then((data) => this.server.emit(Messages.newInvite, data));
+        .then((data) => {
+          this.mailService.sendInvite(data.email, `${data.hostname}/invite?id=${data.id}`);
+          this.server.emit(Messages.newInvite, data.id);
+        });
     }
   }
 
@@ -403,14 +404,14 @@ export class SocketGateway
     }
   }
 
-  @SubscribeMessage(Messages.getInviteByEmail)
-  async getInviteByEmail(
+  @SubscribeMessage(Messages.checkInvitesByEmail)
+  async checkInvitesByEmail(
     @MessageBody() data: UserInterface,
     @ConnectedSocket() client: Socket): Promise<void> {
     if (data) {
       this.inviteService
-        .getInviteByEmail(data.id)
-        .then((data) => this.server.emit(Messages.getInviteByEmail, data));
+        .checkInvitesByEmail(data.id)
+        .then((data) => this.server.emit(Messages.checkInvitesByEmail, data));
     }
   }
 

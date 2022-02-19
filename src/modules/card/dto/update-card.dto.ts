@@ -29,4 +29,6 @@ export class UpdateCardDto {
   @ApiPropertyOptional({ type: String, nullable: true })
   @IsString()
   readonly cover: string;
+
+  public filesCount: number;
 }

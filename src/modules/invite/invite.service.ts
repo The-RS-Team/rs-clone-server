@@ -14,10 +14,28 @@ export class InviteService {
     return this.inviteEntityRepository.findOneOrFail(id);
   }
 
-  async getInviteByEmail(email: string): Promise<InviteEntity> {
-    return this.inviteEntityRepository.findOne({
+  async getInvitesByEmail(email: string): Promise<InviteEntity[]> {
+    return this.inviteEntityRepository.find({
       where: {
         email: email,
+      },
+    });
+  }
+
+  async checkInvitesByEmail(email: string): Promise<InviteEntity[]> {
+    console.log('checkInvitesByEmail');
+    return this.inviteEntityRepository.find({
+      where: {
+        email: email,
+      },
+    });
+  }
+
+  async getInviteByBoard(email: string, boardId: string): Promise<InviteEntity> {
+    return this.inviteEntityRepository.findOneOrFail({
+      where: {
+        email: email,
+        boardId: boardId,
       },
     });
   }
@@ -26,7 +44,7 @@ export class InviteService {
     let invite: InviteEntity;
     inviteEntity.email = inviteEntity.email.toLowerCase();
     try {
-      invite = await this.getInviteByEmail(inviteEntity.email);
+      invite = await this.getInviteByBoard(inviteEntity.email, inviteEntity.boardId);
       if (!invite) {
         invite = this.inviteEntityRepository.create(inviteEntity);
         return this.inviteEntityRepository.save(invite);

@@ -17,6 +17,11 @@ export class InviteEntity {
   @Column('uuid', { nullable: true })
   public boardId: string;
 
+  @ApiPropertyOptional({ type: String, nullable: false })
+  @Column('varchar', { nullable: false })
+  @IsNotEmpty()
+  public hostname: string;
+
   @CreateDateColumn({ nullable: false })
   public expireDate: Date;
 
