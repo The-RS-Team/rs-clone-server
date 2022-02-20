@@ -1,5 +1,4 @@
 import {
-  AfterLoad,
   Column,
   CreateDateColumn,
   Entity,
@@ -12,7 +11,7 @@ import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { CardEntity } from '../../card/models/card';
 
-@Entity('carditem')
+@Entity('carditem', { orderBy: { created: 'ASC' } })
 export class CarditemEntity {
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')

@@ -13,12 +13,20 @@ export class UsersService {
     private readonly usersRepository: Repository<UserEntity>) {
   }
 
-  getUsers(): Promise<UserEntity[]> {
+  async getUsers(): Promise<UserEntity[]> {
     return this.usersRepository.find();
   }
 
-  getUser(id: string): Promise<UserEntity> {
-    return this.usersRepository.findOneOrFail(id);
+  async getUser(id: string): Promise<UserEntity> {
+    return this.usersRepository.findOne(id);
+  }
+
+  getUserByEmail(email: string): Promise<UserEntity> {
+    return this.usersRepository.findOne({
+      where: {
+        email: email,
+      },
+    });
   }
 
   async updateUser(user: UpdateUserDto): Promise<UpdateResult> {
@@ -29,12 +37,18 @@ export class UsersService {
     return this.usersRepository.update(item.user_id, item);
   }
 
-  create(user: CreateUserDto): Promise<UserEntity> {
-    const item = this.usersRepository.merge(user);
-    return this.usersRepository.save(item);
+  async create(user: CreateUserDto): Promise<UserEntity> {
+    const item = await this.getUser(user.user_id);
+    if (!item) {
+      try {
+        return await this.usersRepository.save(user);
+      } catch {
+        return item;
+      }
+    }
   }
 
-  deleteUser(id: string): Promise<DeleteResult> {
+  async deleteUser(id: string): Promise<DeleteResult> {
     return this.usersRepository.delete(id);
   }
 }

@@ -2,6 +2,8 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as firebase from 'firebase-admin';
 import * as serviceAccount from '../../firebaseServiceAccount.json';
+import { UsersService } from '../modules/users/users.service';
+import { UserEntity } from '../modules/users/models/users';
 
 const firebase_params = {
   type: serviceAccount.type,
@@ -22,7 +24,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   private defaultApp: any;
 
-  constructor() {
+  constructor(private readonly usersService: UsersService) {
     this.defaultApp = firebase.initializeApp({
       credential: firebase.credential.cert(firebase_params),
       databaseURL: firebase_params.databaseURL,

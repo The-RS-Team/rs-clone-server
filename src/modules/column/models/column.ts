@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { BoardEntity } from '../../board/models/board';
 import { CardEntity } from '../../card/models/card';
 
-@Entity('column')
+@Entity('column', { orderBy: { position: 'ASC' } })
 export class ColumnEntity {
   @ApiPropertyOptional({ type: String })
   @PrimaryGeneratedColumn('uuid')

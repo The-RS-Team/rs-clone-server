@@ -22,8 +22,12 @@ import { CreateFilesDto } from './modules/files/dto/create-files.dto';
 import { CarditemService } from './modules/carditem/carditem.service';
 import { CreateCarditemDto } from './modules/carditem/dto/create-carditem.dto';
 import { UpdateCarditemDto } from './modules/carditem/dto/update-carditem.dto';
-import { ActivityService } from './modules/activity/activity.service';
 import { UserInterface } from './modules/users/models/users';
+import { ActivityService } from './modules/activity/activity.service';
+import { InviteService } from './modules/invite/invite.service';
+import { InviteEntity } from './modules/invite/models/invite';
+import { MailService } from './mail/mail.service';
+import { UsersToBoardsService } from './modules/userstoboards/userstoboards.service';
 
 @WebSocketGateway({
   cors: { origin: '*' },
@@ -43,6 +47,9 @@ export class SocketGateway
     private readonly filesService: FilesService,
     private readonly carditemService: CarditemService,
     private readonly activityService: ActivityService,
+    private readonly inviteService: InviteService,
+    private readonly mailService: MailService,
+    private readonly usersToBoardsService: UsersToBoardsService,
   ) {
   }
 
@@ -373,6 +380,78 @@ export class SocketGateway
     }
   }
 
+  //Invite
+  @SubscribeMessage(Messages.newInvite)
+  async newInvite(
+    @MessageBody() data: InviteEntity,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.inviteService
+        .create(data)
+        .then((data) => {
+          this.mailService.sendInvite(data.email, `${data.hostname}/board/invite/${data.id}`);
+          this.server.emit(Messages.newInvite, data.id);
+        });
+    }
+  }
+
+  @SubscribeMessage(Messages.getInvite)
+  async getInvite(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.inviteService
+        .getInvite(data.id)
+        .then((data) => this.server.emit(Messages.getInvite, data));
+    }
+  }
+
+  @SubscribeMessage(Messages.checkInvitesByEmail)
+  async checkInvitesByEmail(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.inviteService
+        .checkInvitesByEmail(data.id)
+        .then((data) => this.server.emit(Messages.checkInvitesByEmail, data));
+    }
+  }
+
+  @SubscribeMessage(Messages.deleteInvite)
+  async deleteInvite(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.inviteService
+        .deleteInvite(data.id)
+        .then((deleteResult) => this.server.emit(Messages.deleteInvite, deleteResult));
+    }
+  }
+
+  //UsersToBoards
+  @SubscribeMessage(Messages.deleteUsersToBoards)
+  async deleteUsersToBoards(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): Promise<void> {
+    if (data) {
+      this.usersToBoardsService
+        .deleteItem(data.id)
+        .then((deleteResult) => this.server.emit(Messages.deleteUsersToBoards, deleteResult));
+    }
+  }
+
+  @SubscribeMessage(Messages.getUsersToBoards)
+  getUsersToBoards(
+    @MessageBody() data: UserInterface,
+    @ConnectedSocket() client: Socket): void {
+    if (data) {
+      this.usersToBoardsService
+        .getItemByBoard(data.id)
+        .then((files) => this.server.emit(Messages.getUsersToBoards, files));
+    }
+  }
+
+  //getBoardId
   private async getBoardByColumnId(columnId: string): Promise<string> {
     const column = await this.columnService.getColumn(columnId);
     return column.boardId;

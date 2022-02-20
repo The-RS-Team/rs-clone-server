@@ -22,7 +22,8 @@ import { Actions, Tables } from '../../app.constants';
 export class BoardController {
   constructor(private readonly boardService: BoardService,
               private readonly usersToBoardsService: UsersToBoardsService,
-              private readonly activityService: ActivityService) {
+              private readonly activityService: ActivityService,
+  ) {
   }
 
   @Get('/all')
@@ -37,7 +38,8 @@ export class BoardController {
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Board retrieved successfully.' })
   @ApiNotFoundResponse({ description: 'Board not found.' })
-  async getBoardById(@Param('id', ParseUUIDPipe) id: string): Promise<BoardEntity> {
+  async getBoardById(@CurrentUser() user: UserEntity,
+                     @Param('id', ParseUUIDPipe) id: string): Promise<BoardEntity> {
     return this.boardService.getBoard(id);
   }
 
