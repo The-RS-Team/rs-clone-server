@@ -40,11 +40,11 @@ export class UsersService {
   async create(user: CreateUserDto): Promise<UserEntity> {
     const item = await this.getUser(user.user_id);
     if (!item) {
-      return this.usersRepository.save(user);
+      return await this.usersRepository.save(user);
     }
   }
 
-  deleteUser(id: string): Promise<DeleteResult> {
+  async deleteUser(id: string): Promise<DeleteResult> {
     return this.usersRepository.delete(id);
   }
 }
