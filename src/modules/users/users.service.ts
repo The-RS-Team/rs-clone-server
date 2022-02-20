@@ -40,7 +40,11 @@ export class UsersService {
   async create(user: CreateUserDto): Promise<UserEntity> {
     const item = await this.getUser(user.user_id);
     if (!item) {
-      return await this.usersRepository.save(user);
+      try {
+        return await this.usersRepository.save(user);
+      } catch {
+        return item;
+      }
     }
   }
 

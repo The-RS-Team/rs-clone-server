@@ -389,7 +389,7 @@ export class SocketGateway
       this.inviteService
         .create(data)
         .then((data) => {
-          this.mailService.sendInvite(data.email, `${data.hostname}/invite?id=${data.id}`);
+          this.mailService.sendInvite(data.email, `${data.hostname}/board/invite/${data.id}`);
           this.server.emit(Messages.newInvite, data.id);
         });
     }

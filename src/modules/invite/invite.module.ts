@@ -5,6 +5,7 @@ import { InviteEntity } from './models/invite';
 import { UsersModule } from '../users/users.module';
 import { UsersToBoardsModule } from '../userstoboards/userstoboards.module';
 import { BoardModule } from '../board/board.module';
+import { InviteController } from './invite.controller';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { BoardModule } from '../board/board.module';
     UsersToBoardsModule,
     BoardModule,
   ],
-  controllers: [],
+  controllers: [InviteController],
   providers: [InviteService],
   exports: [InviteService],
 })

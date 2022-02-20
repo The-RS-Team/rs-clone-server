@@ -16,7 +16,7 @@ export class UsersToBoardsService {
   async create(user: UserEntity, board: BoardEntity, isOwner: boolean): Promise<UsersToBoardsEntity> {
     const usersToBoards = new UsersToBoardsEntity(user, board, isOwner);
     const item = this.usersToBoardsRepository.merge(usersToBoards);
-    return this.usersToBoardsRepository.save(item);
+    return await this.usersToBoardsRepository.save(item);
   }
 
   getItem(id: string): Promise<UsersToBoardsEntity> {

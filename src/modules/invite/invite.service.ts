@@ -38,10 +38,11 @@ export class InviteService {
     if (invites.length > 0) {
       const user = await this.usersService.getUserByEmail(email);
       if (user) {
-        invites.forEach(invite => {
+        await invites.forEach(invite => {
           this.boardService.getBoard(invite.boardId).then(board => {
-            this.usersToBoardsService.create(user, board, false);
-            this.inviteEntityRepository.delete(invite.id);
+            this.usersToBoardsService.create(user, board, false).then(() => {
+              this.inviteEntityRepository.delete(invite.id);
+            });
           });
         });
       }

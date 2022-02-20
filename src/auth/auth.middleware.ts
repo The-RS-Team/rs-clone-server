@@ -42,12 +42,6 @@ export class AuthMiddleware implements NestMiddleware {
             user_id: decodedToken.user_id,
             picture: decodedToken.picture,
           };
-
-          const user = req['user'] as UserEntity;
-          if (user) {
-            this.usersService.create(user);
-          }
-
           next();
         }).catch(errMessage => {
         AuthMiddleware.accessDenied(req.url, res, errMessage);
