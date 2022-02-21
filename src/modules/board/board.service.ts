@@ -36,12 +36,13 @@ export class BoardService {
   }
 
   async updateBoard(board: UpdateBoardDto): Promise<UpdateResult> {
-    const item = await this.boardRepository.findOneOrFail(board.id);
+    const item = await this.boardRepository.findOne(board.id);
     if (!item) {
       throw new NotFoundException(`Item ${board.id} not found`);
     }
     Object.assign(item, board);
-    delete item.usersToBoards;
+    if (item.usersToBoards)
+      delete item.usersToBoards;
     return this.boardRepository.update(item.id, item);
   }
 

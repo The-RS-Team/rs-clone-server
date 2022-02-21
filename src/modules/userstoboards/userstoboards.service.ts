@@ -25,7 +25,7 @@ export class UsersToBoardsService {
 
   getItemByBoard(boardId: string): Promise<UsersToBoardsEntity> {
     return getManager()
-      .query('SELECT "userstoboards".*, "users".*, "board".*' +
+      .query('SELECT "userstoboards".*, "users".*' +
         ' FROM "userstoboards" LEFT JOIN "users" ON "userstoboards"."userUserId" = "users"."user_id" ' +
         '                      LEFT JOIN "board" ON "userstoboards"."boardId" = "board"."id" ' +
         '  WHERE "userstoboards"."boardId" =  $1 ', [boardId]);
