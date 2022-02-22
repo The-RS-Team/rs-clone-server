@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/1644746a-76d8-47fd-ac24-603302b98711/resourceGroups/TrelloClone/providers/Microsoft.Web/sites/trello-clone",
+    "appService.deploySubpath": "."
+}
