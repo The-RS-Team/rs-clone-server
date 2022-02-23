@@ -6,9 +6,9 @@ import { MailService } from './mail.service';
 @Module({
   imports: [
     MailerModule.forRoot({
-      transport: 'smtps://smittya@ukr.net:jw069oNKB6bs40W2@smtp.ukr.net',
+      transport: process.env.MAIL_TRANSPORT,
       defaults: {
-        from: '"TrelloClone" <smittya@ukr.net>',
+        from: process.env.MAIL_FROM_NAME,
       },
       template: {
         adapter: new PugAdapter(),

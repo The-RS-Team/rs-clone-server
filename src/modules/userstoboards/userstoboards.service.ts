@@ -19,12 +19,12 @@ export class UsersToBoardsService {
     return await this.usersToBoardsRepository.save(item);
   }
 
-  getItem(id: string): Promise<UsersToBoardsEntity> {
-    return this.usersToBoardsRepository.findOne(id);
+  async getItem(id: string): Promise<UsersToBoardsEntity> {
+    return await this.usersToBoardsRepository.findOne(id);
   }
 
-  getItemByBoard(boardId: string): Promise<UsersToBoardsEntity> {
-    return getManager()
+  async getItemByBoard(boardId: string): Promise<UsersToBoardsEntity> {
+    return await getManager()
       .query('SELECT "userstoboards".*, "users".*' +
         ' FROM "userstoboards" LEFT JOIN "users" ON "userstoboards"."userUserId" = "users"."user_id" ' +
         '                      LEFT JOIN "board" ON "userstoboards"."boardId" = "board"."id" ' +

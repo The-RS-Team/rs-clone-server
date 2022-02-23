@@ -14,7 +14,7 @@ export class AuthService {
   }
 
   async login(user: UserEntity): Promise<string> {
-    this.usersService.create(user);
+    await this.usersService.create(user);
     return new Promise((resolve) => {
       resolve(JSON.stringify(user));
     });

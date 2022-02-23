@@ -18,11 +18,11 @@ export class InviteService {
   }
 
   async getInvite(id: string): Promise<InviteEntity> {
-    return this.inviteEntityRepository.findOneOrFail(id);
+    return await this.inviteEntityRepository.findOneOrFail(id);
   }
 
   async getInvitesByEmail(email: string): Promise<InviteEntity[]> {
-    return this.inviteEntityRepository.find({
+    return await this.inviteEntityRepository.find({
       where: {
         email: email,
       },
@@ -51,7 +51,7 @@ export class InviteService {
   }
 
   async getInviteByBoard(email: string, boardId: string): Promise<InviteEntity> {
-    return this.inviteEntityRepository.findOne({
+    return await this.inviteEntityRepository.findOne({
       where: {
         email: email,
         boardId: boardId,

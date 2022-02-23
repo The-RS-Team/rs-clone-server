@@ -26,7 +26,7 @@ export class FilesService {
   }
 
   async getFile(id: string): Promise<FileEntity> {
-    return this.filesEntityRepository.findOneOrFail(id);
+    return await this.filesEntityRepository.findOneOrFail(id);
   }
 
   async updateFile(filesEntity: FileEntity): Promise<UpdateResult> {
@@ -34,7 +34,7 @@ export class FilesService {
     if (!item) {
       throw new NotFoundException(`Item ${filesEntity.id} not found`);
     }
-    return this.filesEntityRepository.update(item.id, item);
+    return await this.filesEntityRepository.update(item.id, item);
   }
 
   async create(createFilesDto: CreateFilesDto): Promise<FileEntity> {

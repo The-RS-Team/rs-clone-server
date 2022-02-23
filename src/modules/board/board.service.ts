@@ -14,16 +14,16 @@ export class BoardService {
   ) {
   }
 
-  getBoards(userId: string): Promise<BoardEntity[]> {
-    return this.boardRepository
+  async getBoards(userId: string): Promise<BoardEntity[]> {
+    return await this.boardRepository
       .createQueryBuilder('board')
       .leftJoinAndSelect('board.usersToBoards', 'userstoboards')
       .where('userstoboards.userUserId = :userId', { userId: userId })
       .getMany();
   }
 
-  getBoardsFavorite(userId: string): Promise<BoardEntity[]> {
-    return this.boardRepository
+  async getBoardsFavorite(userId: string): Promise<BoardEntity[]> {
+    return await this.boardRepository
       .createQueryBuilder('board')
       .leftJoinAndSelect('board.usersToBoards', 'userstoboards')
       .where('userstoboards.userUserId = :userId', { userId: userId })
@@ -31,8 +31,8 @@ export class BoardService {
       .getMany();
   }
 
-  getBoard(id: string): Promise<BoardEntity> {
-    return this.boardRepository.findOneOrFail(id, { relations: ['columns'] });
+  async getBoard(id: string): Promise<BoardEntity> {
+    return await this.boardRepository.findOneOrFail(id, { relations: ['columns'] });
   }
 
   async updateBoard(board: UpdateBoardDto): Promise<UpdateResult> {
@@ -43,12 +43,12 @@ export class BoardService {
     Object.assign(item, board);
     if (item.usersToBoards)
       delete item.usersToBoards;
-    return this.boardRepository.update(item.id, item);
+    return await this.boardRepository.update(item.id, item);
   }
 
-  create(board: CreateBoardDto): Promise<BoardEntity> {
+  async create(board: CreateBoardDto): Promise<BoardEntity> {
     const item = this.boardRepository.create(board);
-    return this.boardRepository.save(item);
+    return await this.boardRepository.save(item);
   }
 
   async deleteBoard(id: string): Promise<DeleteResult> {

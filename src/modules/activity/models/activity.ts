@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Actions, Tables } from '../../../app.constants';
 
@@ -11,11 +11,13 @@ export class ActivityEntity {
 
   @ApiProperty({ enum: ['insert', 'delete', 'update'] })
   @IsNotEmpty()
+  @IsEnum(Actions)
   @Column({ type: 'enum', enum: Actions, default: Actions.update })
   public action: Actions;
 
   @ApiProperty({ enum: ['board', 'card', 'cardItem', 'column', 'file'] })
   @IsNotEmpty()
+  @IsEnum(Tables)
   @Column({ type: 'enum', enum: Tables })
   public table: Tables;
 
@@ -23,14 +25,17 @@ export class ActivityEntity {
   public created: Date;
 
   @ApiPropertyOptional({ type: String, nullable: false })
+  @IsString()
   @Column('text', { nullable: false })
   public userId: string;
 
   @ApiPropertyOptional({ type: String, nullable: false })
+  @IsUUID()
   @Column('uuid', { nullable: true })
   public boardId: string;
 
   @ApiPropertyOptional({ type: String, nullable: true })
+  @IsString()
   @Column('text', { nullable: true })
   public info: string;
 
