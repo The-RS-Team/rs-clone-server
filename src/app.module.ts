@@ -1,12 +1,42 @@
+import configService from '../db-config';
+import { BoardModule } from './modules/board/board.module';
+import { ColumnModule } from './modules/column/column.module';
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BoardModule } from './board/board.module';
 import { SocketGateway } from './socket.gateway';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersController } from './modules/users/users.controller';
+import { CardModule } from './modules/card/card.module';
+import { UsersModule } from './modules/users/users.module';
+import { FilesModule } from './modules/files/files.module';
+import { AuthModule } from './auth/auth.module';
+import { CarditemModule } from './modules/carditem/carditem.module';
+import { UsersToBoardsModule } from './modules/userstoboards/userstoboards.module';
+import { ActivityModule } from './modules/activity/activity.module';
+import { InviteModule } from './modules/invite/invite.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule, BoardModule],
-  controllers: [],
-  providers: [SocketGateway],
+  imports: [
+    AuthModule,
+    FilesModule,
+    BoardModule,
+    ColumnModule,
+    CardModule,
+    CarditemModule,
+    UsersToBoardsModule,
+    UsersModule,
+    ActivityModule,
+    InviteModule,
+    TypeOrmModule.forRoot(configService.createTypeOrmProdConfig()),
+    MailModule,
+  ],
+  controllers: [
+    UsersController,
+  ],
+  providers: [
+    SocketGateway,
+  ],
 })
-export class AppModule {}
+
+export class AppModule {
+}
